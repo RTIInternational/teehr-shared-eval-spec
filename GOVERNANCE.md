@@ -12,7 +12,8 @@ differences" in the relevant standard so nobody has to rediscover it.
 ## Making a change
 
 1. Open a PR. Say what changes and why, and which conformance cases it adds or changes.
-2. One maintainer from each team approves.
+2. One maintainer from each team approves. If the teams can't agree, TEEHR decides (TEEHR
+   ADR-0011): the shared contract is TEEHR's, and other systems adopt it.
 3. Merge, and add a `CHANGELOG.md` entry with the new `contract_version`.
 
 Each system then adopts the change in its own repo and runs the conformance cases.
