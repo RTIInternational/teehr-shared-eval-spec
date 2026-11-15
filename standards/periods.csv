@@ -1,0 +1,6 @@
+name,form,length,value_time_at,start,end,description
+instant,instant,,,,,A value at a single instant
+hour_starting,duration,PT1H,start,,,The hour starting at value_time
+hour_ending,duration,PT1H,end,,,The hour ending at value_time
+day_starting,duration,P1D,start,,,The day starting at value_time
+day_ending,duration,P1D,end,,,The day ending at value_time
