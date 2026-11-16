@@ -28,6 +28,6 @@
 | | TEEHR | VeriRace |
 | --- | --- | --- |
 | Stored unit | the variable's canonical unit, converted on write | as uploaded, converted at pairing |
-| Variables | its own registry, each with a canonical unit | free text (a registry with canonical units is planned) |
+| Variables | its own registry, each with a canonical unit | its own registry, each with a canonical unit; values stay in the uploaded unit, which must convert to it |
 
 Specs don't depend on either, because every unit-bearing parameter carries its unit.
