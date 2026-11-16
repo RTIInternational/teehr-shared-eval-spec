@@ -14,6 +14,15 @@ proposed and who agreed (see `GOVERNANCE.md`).
 | 2026-11-16 | Seed key encoding | `group_by` order, compact JSON, timestamps ISO 8601 UTC with `Z`, whole floats with `.0`, `null` for missing | TEEHR (VeriRace: `null`, order) | both | #5 |
 | 2026-11-16 | Sub-day blocks | A duration that isn't whole days becomes rows per group (`round(seconds × (n − 1) / span)`, halves to even, in `[1, n]`); not drawable from state | VeriRace | TEEHR | #5 |
 | 2026-11-16 | `min_years` default | 5 | TEEHR | VeriRace | #5 |
+| 2026-11-16 | Metric aliases | `variability_ratio` → `relative_standard_deviation` (VeriRace's CV ratio becomes `coefficient_of_variation_ratio`); `relative_mean` → `multiplicative_bias`; teehr's short names (`relbias`, `multbias`, `relmean`, `relstd`, `vr`, `kge_mod1`, `kge_mod2`) | TEEHR | VeriRace | #4 |
+| 2026-11-16 | Contingency outputs | The four counts as metrics, not `confusion_matrix` | VeriRace | TEEHR | #4 |
+| 2026-11-16 | `max_value_time_delta` | Seconds, as a number | TEEHR | VeriRace | #4 |
+| 2026-11-16 | Year parameter | `year_start_month` (calendar years at 1, US water years at 10), for `annual_peak_flow_bias` (default 1) and `year_block`; `year_block` stays the method name, `gumboot` an alias | TEEHR | VeriRace | #4 |
+| 2026-11-16 | KGE weights | `sr`, `sa`, `sb` (default 1); NaN when either std is 0, whatever the weights | TEEHR | VeriRace | #4 |
+| 2026-11-16 | Transforms | `log` (natural), `sqrt`, `square`, `cube`, `exp`, `reciprocal` (alias `inv`), `abs`; undefined pairs left out; none on contingency, Brier, ensemble and rank metrics | VeriRace (list: TEEHR) | both | #4 |
+| 2026-11-16 | `add_epsilon` | `1e-6` in the evaluation unit, to denominators and before `log` / `reciprocal` | VeriRace | TEEHR | #4 |
+| 2026-11-16 | Result units | Evaluation unit, its square, seconds, or none, per metric | TEEHR | VeriRace | #4 |
+| 2026-11-16 | Event rule, CRPS default | Events are values `≥` the threshold; CRPS estimator `standard` | VeriRace | TEEHR | #4 |
 | 2026-11-16 | Metric names | One canonical name per metric (teehr's long form); frozen aliases (`nse`, `kge`, ...) accepted in specs; results labelled with the canonical name | TEEHR | VeriRace | #3, `standards/metrics.md` |
 | 2026-11-16 | Metrics registry | `standards/metrics.md`, seeded from teehr's definitions, reconciled with VeriRace's | TEEHR | VeriRace | #3 |
 | 2026-11-16 | Spec `version` | Starts at 1 | TEEHR | VeriRace | #3 |
