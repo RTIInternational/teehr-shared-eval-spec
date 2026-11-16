@@ -1,6 +1,6 @@
 # Bootstrap
 
-- **Status:** proposed 2026-11-16 by TEEHR, for agreement. The procedure is VeriRace's
+- **Status:** agreed 2026-11-16 (proposed by TEEHR, accepted by VeriRace). The procedure is VeriRace's
   (`verirace/metrics/bootstrap.py`); teehr adopts it with its metric kernels (TEEHR Phase 4).
 
 A spec's `bootstrap` (on an aggregate stage) gives each metric an interval by resampling each
@@ -12,7 +12,7 @@ them: the same spec, data and seed give the same intervals on both systems.
 | Field | Meaning | Default |
 | --- | --- | --- |
 | `method` | `iid`, `circular_block`, `stationary`, `year_block` | `circular_block` |
-| `block` | block length for `circular_block` / `stationary`: whole days or months as ISO 8601 (`P7D`, `P1M`), or a number of rows | required for those two; none for `iid`, `year_block` |
+| `block` | block length for `circular_block` / `stationary`: whole days or months as ISO 8601 (`P7D`, `P1M`); another duration (`PT12H`), converted to rows per group ("Units"); or a number of rows | required for those two; none for `iid`, `year_block` |
 | `reps` | replicates, 10 to 10,000 | 1000 |
 | `seed` | the stage seed, ≥ 0 | 0 |
 | `quantiles` | the interval: quantiles of the replicates, each in (0, 1) | `[0.05, 0.95]` |
@@ -37,16 +37,26 @@ A replicate resamples **units** of a group, in order:
   the same time however dense the pairs. This is what lets a bootstrap be drawn from stored state
   (`standards/metric-state.md`) and give the same intervals as one drawn from pairs.
 
-Units are numbered `0 .. n−1` in order of first appearance after sorting by `sort_by`.
+- **Other durations** (`block` such as `PT12H`): units are cases, and the block is a number of
+  rows for each group: `round(seconds × (n − 1) / span)`, rounding halves to even, clipped to
+  `[1, n]`, where `n` is the group's cases and `span` its first-to-last `value_time` in seconds (a
+  block of 1 when `span` is 0). These are rows, not periods, so they can't be drawn from state.
+
+Cases and years are numbered `0 .. n−1` in order of first appearance after sorting by `sort_by`.
+A day or month is numbered by its offset from the group's first day or month, empty ones counted.
 
 ## Draws
 
 Each group has its own random streams, so results don't depend on how groups are split across
 workers or how replicates are batched.
 
-1. **Group seed:** `blake2b` (8-byte digest) of the JSON array `[seed, key_1, key_2, ...]` (the
-   group's `group_by` values in order, compact separators `,` and `:`), read as a little-endian
-   unsigned integer.
+1. **Group seed:** `blake2b` (8-byte digest) of the JSON array `[seed, key_1, key_2, ...]`, read
+   as a little-endian unsigned integer:
+   - the key values in the stage's `group_by` order;
+   - compact separators (`,` and `:`), no spaces;
+   - a timestamp as an ISO 8601 UTC string with `Z` (`"2024-01-01T00:00:00Z"`), with fractional
+     seconds only when non-zero;
+   - a float that's a whole number with `.0` (`1.0`); a missing value as `null`.
 2. **Streams:** `SeedSequence(group_seed).spawn(3)` gives `starts`, `breaks` and `more`, each a
    PCG64 generator (numpy `default_rng`).
 3. **Blocks** over `n` units, for `reps` replicates:
@@ -54,8 +64,8 @@ workers or how replicates are batched.
    - `circular_block`: blocks of `b = min(block, n)`; `k = ⌈n / b⌉` per replicate, the last cut to
      fill `n`.
    - Both: `starts.integers(0, n, size=(reps, k))`, drawn as one array, replicate by replicate.
-   - `stationary` (Politis & Romano 1994): `p = 1 / min(block, n)`, `m = min(n, ⌈n/b + 6·√(n/b) + 6⌉)`
-     draws per replicate: `lengths = breaks.geometric(p, size=(reps, m))`, then
+   - `stationary` (Politis & Romano 1994): with `b = min(block, n)`, `p = 1 / b`,
+     `mean = n / b` and `m = min(n, ⌈mean + 6·√mean + 6⌉)` draws per replicate: `lengths = breaks.geometric(p, size=(reps, m))`, then
      `starts = starts.integers(0, n, size=(reps, m))`. Blocks are used in order until they cover `n`
      (the last cut to fit). A replicate they don't cover draws more, one block at a time, from
      `more`: a length `more.geometric(p)`, then a start `more.integers(0, n)`.
@@ -83,9 +93,9 @@ workers or how replicates are batched.
 | Null intervals | `min_count`, `min_years` | minimum sample size, mean and variance checks |
 | Block draws | as above | arch's `CircularBlockBootstrap` / `StationaryBootstrap` |
 
-## To decide
+## Decided
 
-- **Key encoding.** The group seed hashes the group's key values as JSON. Strings and integers are
-  unambiguous; floats (`1.0` vs `1`) and timestamps are not. Proposed: a timestamp is its ISO 8601
-  UTC string with `Z`; a float that's a whole number is written with `.0`. A conformance case pins it.
-- **`min_years` default:** VeriRace's spec default is 5; its library default is 2. Proposed: 5.
+Recorded in `DECISIONS.md` (2026-11-16): this procedure; `year_block` the canonical name with
+`gumboot` its alias; `year_start_month`; the key encoding above (VeriRace changes from Python's
+`default=str` timestamps, so its seeds and intervals change once); `min_years` default 5;
+durations that aren't whole days converted to rows per group.

@@ -9,6 +9,11 @@ proposed and who agreed (see `GOVERNANCE.md`).
 
 | Date | Topic | Decision | By | Accepted | Where |
 | --- | --- | --- | --- | --- | --- |
+| 2026-11-16 | Bootstrap procedure | VeriRace's, pinned in `standards/bootstrap.md`: per-group seeds from the stage seed and group key, three streams, block draws per method, original sample excluded, NaN replicates dropped, type-7 quantiles; teehr adopts it in Phase 4 | TEEHR | VeriRace | #5 |
+| 2026-11-16 | Bootstrap names | `year_block` canonical, `gumboot` its alias; `year_start_month` | TEEHR | VeriRace | #5 |
+| 2026-11-16 | Seed key encoding | `group_by` order, compact JSON, timestamps ISO 8601 UTC with `Z`, whole floats with `.0`, `null` for missing | TEEHR (VeriRace: `null`, order) | both | #5 |
+| 2026-11-16 | Sub-day blocks | A duration that isn't whole days becomes rows per group (`round(seconds × (n − 1) / span)`, halves to even, in `[1, n]`); not drawable from state | VeriRace | TEEHR | #5 |
+| 2026-11-16 | `min_years` default | 5 | TEEHR | VeriRace | #5 |
 | 2026-11-16 | Metric names | One canonical name per metric (teehr's long form); frozen aliases (`nse`, `kge`, ...) accepted in specs; results labelled with the canonical name | TEEHR | VeriRace | #3, `standards/metrics.md` |
 | 2026-11-16 | Metrics registry | `standards/metrics.md`, seeded from teehr's definitions, reconciled with VeriRace's | TEEHR | VeriRace | #3 |
 | 2026-11-16 | Spec `version` | Starts at 1 | TEEHR | VeriRace | #3 |

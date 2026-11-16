@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- `standards/bootstrap.md` (proposed): the bootstrap procedure pinned, from VeriRace's
+- `standards/bootstrap.md` (agreed): the bootstrap procedure pinned, from VeriRace's
   implementation: units, per-group seeds and streams, block draws, intervals; `gumboot` an alias
   of `year_block`; conformance cases for draws and for given draws.
 - VeriRace review: `output.unit` is the evaluation unit; `normalize_by` carries a unit; ramp
