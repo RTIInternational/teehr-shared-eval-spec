@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- `standards/uploads.md` (proposed): the shared upload contract (steps, kinds, formats, status,
+- `standards/uploads.md` (agreed): the shared upload contract (steps, kinds, formats, status,
   preview, ingest, mapping fields, result). `data-api.md`: layer geometry exchange (WKB, GeoArrow,
   GeoParquet, GeoJSON, `bbox`), the shape of `errors` entries, a first shared `code`.
 - `standards/bootstrap.md` (agreed): the bootstrap procedure pinned, from VeriRace's

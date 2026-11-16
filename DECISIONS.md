@@ -9,6 +9,9 @@ proposed and who agreed (see `GOVERNANCE.md`).
 
 | Date | Topic | Decision | By | Accepted | Where |
 | --- | --- | --- | --- | --- | --- |
+| 2026-11-16 | Upload contract | `standards/uploads.md`: four steps, kinds and formats (Shapefile, GeoPackage), statuses with `awaiting_file` and cancel, the preview (`needed`, `notes`, `ingest`), all problems at once, mapping fields named for their column (wide files, `time_format`, explicit `timezone`, `location_key`, `left` / `right`), result fields | TEEHR | VeriRace | #6 |
+| 2026-11-16 | Layer geometry exchange | WKB in EPSG:4326 in `geometry`: GeoArrow in Arrow, GeoParquet in Parquet, GeoJSON in JSON and as a FeatureCollection (`id` = `location_key`), `bbox` | TEEHR | VeriRace | #6 |
+| 2026-11-16 | Error entries | 422 `errors` entries `{loc, msg, type}`, `loc` starting `body` / `query` / `path`; shared `code` `token_refresh_required` | TEEHR | VeriRace | #6 |
 | 2026-11-16 | Bootstrap procedure | VeriRace's, pinned in `standards/bootstrap.md`: per-group seeds from the stage seed and group key, three streams, block draws per method, original sample excluded, NaN replicates dropped, type-7 quantiles; teehr adopts it in Phase 4 | TEEHR | VeriRace | #5 |
 | 2026-11-16 | Bootstrap names | `year_block` canonical, `gumboot` its alias; `year_start_month` | TEEHR | VeriRace | #5 |
 | 2026-11-16 | Seed key encoding | `group_by` order, compact JSON, timestamps ISO 8601 UTC with `Z`, whole floats with `.0`, `null` for missing | TEEHR (VeriRace: `null`, order) | both | #5 |
