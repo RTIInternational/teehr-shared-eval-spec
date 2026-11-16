@@ -2,7 +2,11 @@
 
 - **Status:** agreed 2026-11-13 (shared contract v0, section A). `contract_version: 0`.
 
-Each engine writes its own producer and consumer; this fixes only the format.
+Each engine writes its own producer and consumer, and stores state its own way: state rows don't
+move between systems. This fixes what determines the numbers: the components, the merge laws, the
+sketch mapping, the zero floor, snapping on every path, and the quantile definition. The column
+names and encodings below are descriptive; an engine may store the same information differently
+(VeriRace keeps plain and centered sums, and sparse sketches; see "Known differences").
 
 **Principle:** any slice of a group's pairs yields a state row; rows merge by addition (with a
 mean correction for centered moments); a metric computes identically from raw pairs, from merged
@@ -15,7 +19,7 @@ the columns.
 
 ## 1. `components`: centered moments
 
-Additive by the Chan parallel merge; bit-exact.
+Additive by the Chan parallel merge.
 
 | Column | Meaning |
 | --- | --- |
@@ -43,8 +47,7 @@ Plain addition, e.g. contingency counts `+hits@<threshold>`, `+misses@<threshold
 `+false_alarms@<threshold>`, `+correct_negatives@<threshold>`, and per-case score sums. `int64` for
 counts, `float64` for score sums.
 
-The `<threshold>` in a key is written in the threshold's canonical SI value so keys from both
-systems match. *(Proposed; follows from units on thresholds, not yet agreed.)*
+Keys are engine-internal: state isn't exchanged, so they needn't match across systems.
 
 ## 3. `~primary` / `~secondary`: quantile sketches (DDSketch)
 
@@ -54,19 +57,37 @@ order-dependent).
 
 - **Relative accuracy** α = 0.001, so γ = (1+α)/(1−α) ≈ 1.002002. A positive `x` maps to bucket
   `i = ⌈log_γ(x)⌉`; a bucket's estimate is `2·γ^i/(γ+1)`, within 0.1% relative error.
-- **Zero / sub-floor:** a `zero` counter; magnitudes below the configured `min` fold into it.
+- **Sketched in the evaluation unit.** Values are sketched after conversion to the evaluation
+  unit (`output.unit`). Buckets are logarithmic, so the same data sketched in another unit snaps
+  to different representatives; sketching in one unit keeps paths and systems equal.
+- **Zero / sub-floor:** a `zero` counter; magnitudes below `1e-12` (in the evaluation unit) fold
+  into it.
 - **Signed values:** a sign-mirrored bucket set indexed on `|x|` for the negative side.
-- **Bounded size:** a fixed index range from configured `[min, max]`; counts outside collapse into
-  the boundary buckets. γ, the range and the collapsing are pinned by `contract_version`.
-- Stored as a fixed-length `int64` array in index order. Merge = add counts per index.
+- **No range collapsing.** The index is unbounded (store it sparsely); collapsing counts into
+  boundary buckets would void the 0.1% guarantee for values outside the range.
+- Merge = add counts per bucket.
+- **Snapping on every path.** A quantile metric that `standards/metrics.md` marks as merging from
+  state takes its quantile from bucket representatives on every path, including from raw pairs, so
+  pairs, merged state and bootstrap agree (within 0.1% of the exact value). A metric not marked
+  mergeable may compute exactly from pairs.
+- **Quantile definition.** With `n` values (counts, or bootstrap weights) and level `q`: let
+  `t = q·n`; `lo` is the first bucket whose cumulative count reaches `t`, `hi` the first whose
+  cumulative count exceeds `t` (each capped at the last bucket). The quantile is the mean of their
+  representatives; NaN without values. Another definition (e.g. linear interpolation) gives other
+  numbers.
 
 ## Encoding and invariants
 
-- `float64` for moments, `int64` for counts, each sketch a fixed-length `int64` array. `NaN` where
-  a metric is undefined; null = absent component.
-- **Path independence** (conformance cases): `pairs == merged state == bootstrap from state`
-  exactly for all three families. A sketch quantile is additionally within 0.1% of the true value.
+- `float64` for moments, `int64` for counts. `NaN` where a metric is undefined; null = absent
+  component.
+- **Path independence** (conformance cases): `pairs == merged state == bootstrap from state`.
+  Counts and sketch quantiles are exact; floating-point moments agree within the conformance
+  tolerance, since merge order changes their rounding. A sketch quantile is additionally within
+  0.1% of the true value.
 
-## Open
+## Known differences (not shared)
 
-- The sketch `[min, max]` range per variable (pinned by `contract_version`).
+| | TEEHR | VeriRace |
+| --- | --- | --- |
+| Moments | Chan means and `M2` | plain sums and centered sums (`ss_*`, `sp_*`) |
+| Sketch storage | (TEEHR's choice) | sparse list of `{bucket, weight}`, `float64` weights |
