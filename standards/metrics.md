@@ -20,11 +20,29 @@
 `obs` is the primary value, `pred` the secondary. Means are over pairs; `std` is the
 population standard deviation.
 
-**Parameters every metric takes** (both change numbers):
+**`transform`** (default none) is applied to both sides before the metric:
 
-- `transform`: applied to both sides before the metric (none by default).
-- `add_epsilon`: adds a tiny epsilon to denominators, so a zero denominator gives a large value
-  instead of NaN (false by default).
+| Transform | Aliases | Value | Undefined for |
+| --- | --- | --- | --- |
+| `log` | | natural log | ≤ 0 |
+| `sqrt` | | square root | < 0 |
+| `square` | | x² | |
+| `cube` | | x³ | |
+| `exp` | | eˣ | overflow |
+| `reciprocal` | `inv` | 1 / x | 0 |
+| `abs` | | \|x\| | |
+
+- A pair whose transformed value is undefined (or not finite) is left out of that metric.
+- **No transform** on the four contingency counts, the six scores from them, `mean_brier_score`,
+  and the ensemble and rank metrics (`ensemble_spread`, `ensemble_mean_root_mean_square_error`,
+  `spread_skill_ratio`, `rank_frequency`, `rank_outlier_fraction`, `rank_histogram_reliability`):
+  it's meaningless there (an increasing transform doesn't change which values are events;
+  `reciprocal` flips them). A spec that asks for one is refused.
+
+**`add_epsilon`** (default false) adds `1e-6`, in the evaluation unit (`output.unit`), to every
+denominator, and to both sides before `log` and `reciprocal`, so a zero gives a large finite value
+instead of an undefined one. The spec fixes the evaluation unit, so the result is the same on both
+systems.
 
 **Result units:** a metric of values (`mean_error`, `mean_absolute_error`,
 `root_mean_square_error`, `max_value_delta`, `minimum`, `maximum`, `average`, `sum`,
@@ -60,7 +78,7 @@ seconds; counts, ratios, scores and correlations have none.
 | `root_mean_standard_deviation_ratio` | `rsr` | RMSE / std(obs) | | yes |
 | `nash_sutcliffe_efficiency` | `nse` | 1 − sum((pred − obs)²) / sum((obs − mean(obs))²) | | yes |
 | `nash_sutcliffe_efficiency_normalized` | `nnse` | 1 / (2 − NSE) | | yes |
-| `kling_gupta_efficiency` | `kge` | 1 − sqrt(sr·(r−1)² + sa·(α−1)² + sb·(β−1)²), α = std ratio, β = mean ratio (Gupta et al. 2009); NaN if std(pred) or std(obs) is 0 | `sr`, `sa`, `sb`: weights on the three terms (default 1 each) | yes |
+| `kling_gupta_efficiency` | `kge` | 1 − sqrt(sr·(r−1)² + sa·(α−1)² + sb·(β−1)²), α = std ratio, β = mean ratio (Gupta et al. 2009); NaN if std(pred) or std(obs) is 0, whatever the weights | `sr`, `sa`, `sb`: weights on the three terms (default 1 each) | yes |
 | `kling_gupta_efficiency_mod1` | `kge_2012`, `kge_mod1` | as KGE with α the ratio of coefficients of variation (Kling et al. 2012) | `sr`, `sa`, `sb`: weights on the three terms (default 1 each) | yes |
 | `kling_gupta_efficiency_mod2` | `kge_2021`, `kge_mod2` | 1 − sqrt(sr·(r−1)² + sa·(α−1)² + sb·β²), β = (mean(pred) − mean(obs)) / std(obs) (Tang et al. 2021) | `sr`, `sa`, `sb`: weights on the three terms (default 1 each) | yes |
 | `max_value_time_delta` | | time of max(pred) − time of max(obs), in seconds | | yes |
@@ -112,21 +130,15 @@ All take `threshold` (`{value, unit}`, `{quantile}` or `{column}`) and merge fro
 | `rank_outlier_fraction` | | share of cases with obs outside the members' range | | yes |
 | `rank_histogram_reliability` | | sum over ranks of \|frequency − 1/(m+1)\| | | no |
 
-## To decide
+## Decided
 
-TEEHR's proposed calls (TEEHR has final say; they become decisions once VeriRace accepts, in
-`DECISIONS.md`):
+Recorded in `DECISIONS.md` (2026-11-16): the canonical names and aliases above, including
+`variability_ratio` → `relative_standard_deviation` (VeriRace's CV-ratio metric becomes
+`coefficient_of_variation_ratio`) and `relative_mean` → `multiplicative_bias`; the four counts in
+place of `confusion_matrix`; `max_value_time_delta` in seconds; `year_start_month` (default 1) for
+`annual_peak_flow_bias`; the KGE weights; the transforms and `add_epsilon` as above; result units;
+events are values `≥` the threshold; CRPS's default estimator `standard`.
 
-- **`variability_ratio`:** an alias of `relative_standard_deviation` (teehr defines both as
-  std(pred) / std(obs)). Not dropped: teehr has shipped the name, and aliases are never removed.
-  The CV ratio, if wanted, is a new metric, `coefficient_of_variation_ratio`.
-- **`relative_mean`:** an alias of `multiplicative_bias` (VeriRace's proposal, accepted).
-- **`max_value_time_delta`:** seconds, as a number (teehr's existing results don't change).
-- **`confusion_matrix`:** the four counts as metrics (VeriRace's proposal, accepted).
-- **teehr's short names as aliases**, lowercased, where unambiguous: `relbias`, `multbias`,
-  `relmean`, `relstd`, `vr`, `kge_mod1`, `kge_mod2`. Not `r` or `r2`: too easy to collide.
-- **`center_of_timing`, `standard_deviation_of_timing`** (teehr): defined here when VeriRace adds
-  them.
-- **Defaults that change numbers:** `annual_peak_flow_bias`'s `year_start_month` 1 (teehr's
-  calendar-year behaviour); CRPS's estimator `standard`; events are values `≥` the threshold; KGE
-  weights 1; `transform` none; `add_epsilon` false.
+## Open
+
+- `center_of_timing`, `standard_deviation_of_timing` (teehr): defined here when VeriRace adds them.
