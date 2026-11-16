@@ -40,7 +40,8 @@ first; expressions follow. Options to decide here:
 - a function, e.g. `value > qty(1000, '[cft_i]/s')`;
 - moving value bounds out of expressions into structured filter fields that carry `{value, unit}`.
 
-Proposed interim (not yet agreed): until decided, a numeric literal in an input's `filter` is read
-in that dataset's own unit, and one in a pair-level `filter` or `fields[].expr` is read in the
-evaluation unit (`output.unit`). After pairing, both sides are in the evaluation unit, so "the
-dataset's own unit" no longer identifies one unit.
+Interim rule, until decided: a numeric literal in an input's `filter` is read in the **variable's
+canonical unit** (`standards/units.md`), not in the unit the dataset was stored in, so the same
+filter selects the same rows in both systems. A literal in a pair-level `filter` or
+`fields[].expr` is read in the evaluation unit (`output.unit`): after pairing, both sides are in
+that unit.

@@ -47,4 +47,3 @@ present. Duplicate keys in one upload are refused.
 | | TEEHR | VeriRace |
 | --- | --- | --- |
 | Location layer | per series, with a dataset default | per dataset |
-| Period | per dataset | per dataset, which a series may override (still one period per series) |

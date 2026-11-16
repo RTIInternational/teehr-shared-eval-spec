@@ -90,7 +90,9 @@ expression is still open (`spec/expressions.md`).
 ## Dataset references
 
 A reference is a name: lowercase letters, digits and `_`, starting with a letter, at most 60
-characters. Used by `dataset`, `relation` and `reference`.
+characters. Used by `dataset`, `relation` and `reference`. `<name>` is a dataset in the
+evaluation's project; `public.<name>` is one in the `public` project. (`<project>.<name>` may come
+later.)
 
 ## Validation (reject before any run)
 
@@ -124,8 +126,6 @@ definition, parameters, whether it merges from state), seeded from VeriRace's re
 
 ## Open
 
-- How a reference names a dataset in another project (TEEHR uses `public.` / `platform.`
-  prefixes for its system projects).
 - Generated secondary inputs (persistence, climatology, blend): VeriRace has them; v0 or later?
 - How `member` and `reference_time` flow through pairing for forecast verification.
 - Whether `output` geometry/format belongs in the spec or in API content negotiation.

@@ -57,7 +57,11 @@ order-dependent).
 
 - **Relative accuracy** α = 0.001, so γ = (1+α)/(1−α) ≈ 1.002002. A positive `x` maps to bucket
   `i = ⌈log_γ(x)⌉`; a bucket's estimate is `2·γ^i/(γ+1)`, within 0.1% relative error.
-- **Zero / sub-floor:** a `zero` counter; magnitudes below `1e-12` fold into it.
+- **Sketched in the evaluation unit.** Values are sketched after conversion to the evaluation
+  unit (`output.unit`). Buckets are logarithmic, so the same data sketched in another unit snaps
+  to different representatives; sketching in one unit keeps paths and systems equal.
+- **Zero / sub-floor:** a `zero` counter; magnitudes below `1e-12` (in the evaluation unit) fold
+  into it.
 - **Signed values:** a sign-mirrored bucket set indexed on `|x|` for the negative side.
 - **No range collapsing.** The index is unbounded (store it sparsely); collapsing counts into
   boundary buckets would void the 0.1% guarantee for values outside the range.
