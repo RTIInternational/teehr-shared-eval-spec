@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- `standards/uploads.md` (agreed): the shared upload contract (steps, kinds, formats, status,
+  preview, ingest, mapping fields, result). `data-api.md`: layer geometry exchange (WKB, GeoArrow,
+  GeoParquet, GeoJSON, `bbox`), the shape of `errors` entries, a first shared `code`.
 - `standards/bootstrap.md` (agreed): the bootstrap procedure pinned, from VeriRace's
   implementation: units, per-group seeds and streams, block draws, intervals; `gumboot` an alias
   of `year_block`; conformance cases for draws and for given draws.

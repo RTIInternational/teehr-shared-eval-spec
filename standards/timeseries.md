@@ -38,7 +38,8 @@ present. Duplicate keys in one upload are refused.
 
 ## Other dataset types
 
-- **`layer`**: locations keyed by `location_key`, EPSG:4326 `geometry`, optional `name`, attributes.
+- **`layer`**: locations keyed by `location_key`, EPSG:4326 `geometry` (exchanged as in
+  `standards/data-api.md`), optional `name`, attributes.
 - **`crosswalk`**: `left_key` → `right_key` between two datasets' series, plus optional columns
   (e.g. `weight`).
 
