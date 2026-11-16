@@ -35,6 +35,18 @@
 
 A system may add headers of its own (TEEHR sends `X-Snapshot-Id`).
 
+## Layers
+
+A layer's geometry is WKB in EPSG:4326 (longitude, latitude), in a column named `geometry`:
+
+- **Arrow:** a binary column marked as GeoArrow WKB (`ARROW:extension:name` `geoarrow.wkb`).
+- **Parquet:** GeoParquet 1.1 metadata (`geo`), primary column `geometry`; no `crs` means
+  OGC:CRS84.
+- **JSON:** each row's `geometry` is a GeoJSON geometry object.
+- **`Accept: application/geo+json`:** a FeatureCollection, each feature's `id` its `location_key`;
+  paging in the `X-Next-Cursor` / `X-Total-Rows` headers.
+- **`bbox=minx,miny,maxx,maxy`** (layers only): the locations whose bounds overlap it.
+
 ## Errors
 
 Every error is RFC 9457 `application/problem+json`:
@@ -44,7 +56,14 @@ Every error is RFC 9457 `application/problem+json`:
 ```
 
 - `code`: optional, machine-readable, stable (e.g. `token_refresh_required`).
-- `errors`: on 422, a list of the individual validation problems.
+- `errors`: on 422, one entry per problem, all of them at once:
+  `{"loc": [...], "msg": "...", "type": "..."}`. `loc` is the path to the problem as strings, its
+  first item where it is (`body`, `query`, `path`): `["body", "mapping", "timezone"]`.
+- Shared `code` values:
+
+  | `code` | Status | Meaning |
+  | --- | --- | --- |
+  | `token_refresh_required` | 403 | the access token predates a role the caller now has; get a new one and retry |
 - `title` is the HTTP reason phrase; these are pinned so they don't vary by runtime:
   413 `Content Too Large`, 414 `URI Too Long`, 416 `Range Not Satisfiable`,
   422 `Unprocessable Content`.
@@ -58,9 +77,9 @@ Every error is RFC 9457 `application/problem+json`:
 | Paging headers | `X-Next-Cursor`, `X-Total-Rows` | as the standard | `X-VeriRace-Next-Cursor`, `X-VeriRace-Total-Rows` |
 | 422 `title` | `Unprocessable Content` | as the standard | `Invalid request` |
 | `code` member | optional | sent | not sent yet |
+| Layer geometry in Arrow | `geoarrow.wkb` extension | plain binary | as the standard |
+| GeoJSON, `bbox` | as above | as the standard | not yet |
 
 ## Open
 
-- The shape of each entry in `errors`.
-- A shared list of `code` values.
-- Uploads (drop box → inspect → load job) once both systems have them.
+- More shared `code` values as they come up.
