@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- `data-api.md`: TEEHR's `/data` `filter` is now the shared expression language.
 - `standards/uploads.md` (agreed): the shared upload contract (steps, kinds, formats, status,
   preview, ingest, mapping fields, result). `data-api.md`: layer geometry exchange (WKB, GeoArrow,
   GeoParquet, GeoJSON, `bbox`), the shape of `errors` entries, a first shared `code`.

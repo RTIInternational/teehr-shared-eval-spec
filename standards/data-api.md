@@ -1,7 +1,6 @@
 # Data API: reading and errors
 
-- **Status:** seeded 2026-11-15. The shared target. TEEHR implements it, except that its `filter`
-  uses PyIceberg's expression syntax rather than `spec/expressions.md`. VeriRace reads through
+- **Status:** seeded 2026-11-15. The shared target. TEEHR implements it. VeriRace reads through
   `GET …/datasets/{name}/values` today and plans to add `/data`. See "Known differences".
 
 ## Reading a dataset
@@ -73,7 +72,7 @@ Every error is RFC 9457 `application/problem+json`:
 | | This standard | TEEHR today | VeriRace today |
 | --- | --- | --- | --- |
 | Endpoint | `…/data` with `columns` and an expression `filter` | as the standard | `…/values` with structured parameters (`series_key`, `start`, `end`, `reference_time`, `member`, `unit`, `limit`, `cursor`) |
-| `filter` syntax | `spec/expressions.md` | PyIceberg expressions (moving to `spec/expressions.md`) | no expression filter |
+| `filter` syntax | `spec/expressions.md` | as the standard | no expression filter |
 | Paging headers | `X-Next-Cursor`, `X-Total-Rows` | as the standard | `X-VeriRace-Next-Cursor`, `X-VeriRace-Total-Rows` |
 | 422 `title` | `Unprocessable Content` | as the standard | `Invalid request` |
 | `code` member | optional | sent | not sent yet |
