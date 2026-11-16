@@ -1,6 +1,8 @@
 # Data API: reading and errors
 
-- **Status:** seeded 2026-11-15. Follows VeriRace's read contract; TEEHR implements it.
+- **Status:** seeded 2026-11-15. The shared target; neither system implements all of it yet.
+  VeriRace reads through `GET …/datasets/{name}/values` today and plans to add `/data`
+  (see "Known differences").
 
 ## Reading a dataset
 
@@ -46,6 +48,15 @@ Every error is RFC 9457 `application/problem+json`:
 - `title` is the HTTP reason phrase; these are pinned so they don't vary by runtime:
   413 `Content Too Large`, 414 `URI Too Long`, 416 `Range Not Satisfiable`,
   422 `Unprocessable Content`.
+
+## Known differences (until each system conforms)
+
+| | This standard | VeriRace today |
+| --- | --- | --- |
+| Endpoint | `…/data` with `columns` and an expression `filter` | `…/values` with structured parameters (`series_key`, `start`, `end`, `reference_time`, `member`, `unit`, `limit`, `cursor`) |
+| Paging headers | `X-Next-Cursor`, `X-Total-Rows` | `X-VeriRace-Next-Cursor`, `X-VeriRace-Total-Rows` |
+| 422 `title` | `Unprocessable Content` | `Invalid request` |
+| `code` member | optional | not sent yet |
 
 ## Open
 

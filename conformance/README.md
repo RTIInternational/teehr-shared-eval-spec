@@ -27,4 +27,7 @@ cases/<name>/
 - unit conversion: the same threshold in `[cft_i]/s` and `m3/s` gives identical counts;
 - a bare-number threshold is rejected;
 - period pairing: `hour_starting` vs `hour_ending` don't pair; calendar spans across Jan 1;
-- an off-list expression is rejected.
+- an off-list expression is rejected, including a bare `log`;
+- `ln` and `log10` give the same values on both engines;
+- a ramp threshold given in K and in Cel scores the same events (scale-only conversion);
+- sketch quantiles at levels that fall between and on bucket boundaries (the quantile definition).

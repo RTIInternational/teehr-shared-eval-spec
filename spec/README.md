@@ -82,7 +82,7 @@ expression is still open (`spec/expressions.md`).
   with parameters. `skill` scores against a `reference` dataset.
 - **`bootstrap`**: optional; `method: block` resamples metric-state chunks
   (`standards/metric-state.md`).
-- **`output`**: `unit` for plain thresholds and display (defaults to the primary's unit),
+- **`output`**: `unit`, the evaluation unit (defaults to the primary's unit; `standards/units.md`),
   `include_pairs`, and geometry/attributes for a geospatial group key.
 - **`periods`**: optional; inline definitions of any non-shared period the spec names
   (`standards/periods.md`).
@@ -104,6 +104,23 @@ characters. Used by `dataset`, `relation` and `reference`.
 
 `version` starts at 0. Breaking changes bump it; a loader supports the current and previous
 version so saved specs keep running across one migration window.
+
+## To settle before the JSON Schema
+
+The schema is to start from VeriRace's `evaluation-spec-v1.schema.json`, but the example above
+differs from VeriRace's v1 in these places:
+
+| | This draft | VeriRace v1 |
+| --- | --- | --- |
+| `version` | `0` | `1` |
+| metric names | `nash_sutcliffe_efficiency` | `nse` |
+| `bootstrap` | top level: `iterations`, `ci_level`, `block: P1M` | on the aggregate stage: `method` (`iid`, `circular_block`, `stationary`, `year_block`), `block`, `reps`, `seed` |
+| durations | ISO 8601 (`P1M`) | `6h`, `30min`, `1d`; `1mo` for bootstrap blocks |
+| window columns on pairs | `period_start`, `period_end` | `primary_period_start` … `secondary_period_end` |
+
+**Metrics aren't shared yet.** Names, definitions and parameters decide the numbers, so the same
+spec can't give the same results until they're agreed. Proposed: `standards/metrics.md` (name,
+definition, parameters, whether it merges from state), seeded from VeriRace's registry.
 
 ## Open
 
