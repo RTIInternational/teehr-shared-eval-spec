@@ -26,7 +26,7 @@ gives the same result.
 ## Example
 
 ```yaml
-version: 0
+version: 1
 name: nwm30-vs-usgs-by-lead-time
 
 inputs:
@@ -39,7 +39,7 @@ pair:
   relation: usgs_nwm30_crosswalk
 
 fields:
-  - {name: lead_time_bin, fn: lead_time_bins, width: 6h}
+  - {name: lead_time_bin, fn: lead_time_bins, width: PT6H}
   - {name: high_flow, expr: "primary_value > 1000"}
 
 filter: "value_time >= '2010-10-01' AND value_time < '2020-10-01'"
@@ -53,8 +53,7 @@ aggregate:
       - nash_sutcliffe_efficiency
       - {name: hits, threshold: {value: 1000, unit: "[cft_i]/s"}}
     skill: {reference: nwm30_medium_range_mem1, metrics: [rmse]}
-
-bootstrap: {method: block, block: P1M, iterations: 1000, seed: 42, ci_level: 0.90}
+    bootstrap: {method: circular_block, block: P1M, reps: 1000, seed: 42}
 
 output:
   unit: "[cft_i]/s"
@@ -80,9 +79,10 @@ expression is still open (`spec/expressions.md`).
 - **`filter`**: one row filter after fields, before aggregation.
 - **`aggregate`**: one or more blocks of `group_by` + `metrics`. A metric is a name or an object
   with parameters. `skill` scores against a `reference` dataset.
-- **`bootstrap`**: optional; `method: block` resamples metric-state chunks
+- **`bootstrap`**: optional, on an aggregate block: `method` (`iid`, `circular_block`,
+  `stationary`), `block` (ISO 8601), `reps`, `seed`; resamples metric-state chunks
   (`standards/metric-state.md`).
-- **`output`**: `unit` for plain thresholds and display (defaults to the primary's unit),
+- **`output`**: `unit`, the evaluation unit (defaults to the primary's unit; `standards/units.md`),
   `include_pairs`, and geometry/attributes for a geospatial group key.
 - **`periods`**: optional; inline definitions of any non-shared period the spec names
   (`standards/periods.md`).
@@ -90,7 +90,9 @@ expression is still open (`spec/expressions.md`).
 ## Dataset references
 
 A reference is a name: lowercase letters, digits and `_`, starting with a letter, at most 60
-characters. Used by `dataset`, `relation` and `reference`.
+characters. Used by `dataset`, `relation` and `reference`. `<name>` is a dataset in the
+evaluation's project; `public.<name>` is one in the `public` project. (`<project>.<name>` may come
+later.)
 
 ## Validation (reject before any run)
 
@@ -102,13 +104,31 @@ characters. Used by `dataset`, `relation` and `reference`.
 
 ## Versioning
 
-`version` starts at 0. Breaking changes bump it; a loader supports the current and previous
+`version` starts at 1 (VeriRace's v1). Breaking changes bump it; a loader supports the current and previous
 version so saved specs keep running across one migration window.
+
+## Decided (from VeriRace v1)
+
+The schema starts from VeriRace's `evaluation-spec-v1.schema.json`, with these decided where the
+draft and VeriRace v1 differed (`DECISIONS.md`):
+
+| | Decided |
+| --- | --- |
+| `version` | starts at `1` |
+| metric names | one canonical name per metric (teehr's long form, e.g. `nash_sutcliffe_efficiency`), plus frozen aliases (`nse`, `kge`, ...) accepted wherever a spec names a metric; results are always labelled with the canonical name (`standards/metrics.md`) |
+| `bootstrap` | on the aggregate stage (VeriRace's shape): `method`, `block`, `reps`, `seed`; method names `iid`, `circular_block`, `stationary` (the last two as in teehr). Open: whether VeriRace's `year_block` is teehr's `gumboot` |
+| durations | ISO 8601 everywhere (`PT6H`, `PT30M`, `P1D`, `P1M`) |
+| window columns on pairs | one `period_start`, `period_end`: values only pair when their windows are equal, so per-side columns would always match |
+
+**Metrics aren't shared yet.** Names, definitions and parameters decide the numbers, so the same
+spec can't give the same results until they're agreed. `standards/metrics.md` holds the naming
+rules; its entries are seeded from teehr's definitions, then reconciled with VeriRace's registry.
 
 ## Open
 
-- How a reference names a dataset in another project (TEEHR uses `public.` / `platform.`
-  prefixes for its system projects).
+- How a bootstrap interval is asked for (VeriRace's level vs teehr's `quantiles`), and whether
+  `year_block` is teehr's `gumboot`.
+
 - Generated secondary inputs (persistence, climatology, blend): VeriRace has them; v0 or later?
 - How `member` and `reference_time` flow through pairing for forecast verification.
 - Whether `output` geometry/format belongs in the spec or in API content negotiation.
