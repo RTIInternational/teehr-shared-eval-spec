@@ -129,4 +129,9 @@ rules; its entries are seeded from teehr's definitions, then reconciled with Ver
 
 - Generated secondary inputs (persistence, climatology, blend): VeriRace has them; v0 or later?
 - How `member` and `reference_time` flow through pairing for forecast verification.
+- A crosswalk whose two sides share a series table (e.g. two NWM forecast ranges): `pair.relation`
+  can't tell which side is primary from the inputs, so the spec must say (e.g.
+  `relation: {crosswalk: x, primary: left}`).
+- Directional crosswalk columns (a `weight` for many-to-one aggregation): which side the weights
+  aggregate onto, and how a metric uses them.
 - Whether `output` geometry/format belongs in the spec or in API content negotiation.
