@@ -25,10 +25,16 @@ Used by `filter` (row filters) and `fields[].expr` (derived columns). **Not raw 
 
 ## Candidates for the allow-list
 
-VeriRace accepts these today: `ceil`, `floor`, `round`, `nullif`, `quarter`, `week`, `minute`,
-`dayofyear`, `dayofweek`, `date_diff`, `epoch`, `extract`, `isnan`, `isinf`, `isfinite`, `lower`,
-`upper`, `length`, `substring`, `concat`, plus `CAST`, `ILIKE`, `||` and `%`. Those that transpile
-faithfully to Trino and Spark join the list; VeriRace drops the rest.
+VeriRace accepts more functions today. Decided (`DECISIONS.md`), pending a conformance case each:
+
+- **Join the list:** `ceil`, `floor`, `nullif`, `lower`, `upper`, `length`, `substring`, `concat`
+  and `||`, `%`, `quarter`, `minute`, `extract` for `year` / `month` / `day` / `hour` / `minute`,
+  and `CAST` to `double`, `bigint`, `varchar`, `date`, `timestamp`.
+- **Stay off:** `dayofweek` (DuckDB counts Sunday as 0, Spark Sunday as 1, Trino Monday as 1),
+  `week` (ISO week or not), `date_diff` (argument order differs by engine), `epoch` (DuckDB only),
+  `isnan` / `isinf` / `isfinite` (names differ; Spark lacks some), `ILIKE` (not in Trino).
+- **To check:** `round` (how ties round on each engine), `dayofyear`, and `pow` in Trino (`power`
+  exists).
 
 ## Open: units in expressions
 

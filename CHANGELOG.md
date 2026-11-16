@@ -11,6 +11,10 @@
   are built in the evaluation unit; the data API's known differences gain a TEEHR column; dataset
   references are `<name>` (the evaluation's project) and `public.<name>`; the per-series period
   is no longer a difference.
+- TEEHR's calls, accepted by VeriRace: canonical metric names with aliases
+  (`standards/metrics.md`); `version` starts at 1; ISO 8601 durations; bootstrap on the aggregate
+  stage; one pair of window columns; snapping for mergeable metrics; allow-list additions. Adds
+  `DECISIONS.md` and the authorship conventions in `GOVERNANCE.md`.
 
 - Seeded from the TEEHR design docs agreed with VeriRace so far (shared contract v0, spec schema
   v0, ADR-0012 periods, data model v1).

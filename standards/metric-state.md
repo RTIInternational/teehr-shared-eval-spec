@@ -66,8 +66,10 @@ order-dependent).
 - **No range collapsing.** The index is unbounded (store it sparsely); collapsing counts into
   boundary buckets would void the 0.1% guarantee for values outside the range.
 - Merge = add counts per bucket.
-- **Snapping on every path.** A quantile metric takes its quantile from bucket representatives on
-  every path, including from raw pairs, so pairs, merged state and bootstrap agree.
+- **Snapping on every path.** A quantile metric that `standards/metrics.md` marks as merging from
+  state takes its quantile from bucket representatives on every path, including from raw pairs, so
+  pairs, merged state and bootstrap agree (within 0.1% of the exact value). A metric not marked
+  mergeable may compute exactly from pairs.
 - **Quantile definition.** With `n` values (counts, or bootstrap weights) and level `q`: let
   `t = q·n`; `lo` is the first bucket whose cumulative count reaches `t`, `hi` the first whose
   cumulative count exceeds `t` (each capped at the last bucket). The quantile is the mean of their
