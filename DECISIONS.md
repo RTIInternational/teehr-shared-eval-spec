@@ -9,6 +9,11 @@ proposed and who agreed (see `GOVERNANCE.md`).
 
 | Date | Topic | Decision | By | Accepted | Where |
 | --- | --- | --- | --- | --- | --- |
+| 2026-11-16 | Bootstrap procedure | VeriRace's, pinned in `standards/bootstrap.md`: per-group seeds from the stage seed and group key, three streams, block draws per method, original sample excluded, NaN replicates dropped, type-7 quantiles; teehr adopts it in Phase 4 | TEEHR | VeriRace | #5 |
+| 2026-11-16 | Bootstrap names | `year_block` canonical, `gumboot` its alias; `year_start_month` | TEEHR | VeriRace | #5 |
+| 2026-11-16 | Seed key encoding | `group_by` order, compact JSON, timestamps ISO 8601 UTC with `Z`, whole floats with `.0`, `null` for missing | TEEHR (VeriRace: `null`, order) | both | #5 |
+| 2026-11-16 | Sub-day blocks | A duration that isn't whole days becomes rows per group (`round(seconds × (n − 1) / span)`, halves to even, in `[1, n]`); not drawable from state | VeriRace | TEEHR | #5 |
+| 2026-11-16 | `min_years` default | 5 | TEEHR | VeriRace | #5 |
 | 2026-11-16 | Metric aliases | `variability_ratio` → `relative_standard_deviation` (VeriRace's CV ratio becomes `coefficient_of_variation_ratio`); `relative_mean` → `multiplicative_bias`; teehr's short names (`relbias`, `multbias`, `relmean`, `relstd`, `vr`, `kge_mod1`, `kge_mod2`) | TEEHR | VeriRace | #4 |
 | 2026-11-16 | Contingency outputs | The four counts as metrics, not `confusion_matrix` | VeriRace | TEEHR | #4 |
 | 2026-11-16 | `max_value_time_delta` | Seconds, as a number | TEEHR | VeriRace | #4 |
