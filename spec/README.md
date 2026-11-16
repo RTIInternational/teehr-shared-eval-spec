@@ -126,7 +126,6 @@ rules; its entries are seeded from teehr's definitions, then reconciled with Ver
 
 ## Open
 
-
 - Generated secondary inputs (persistence, climatology, blend): VeriRace has them; v0 or later?
 - How `member` and `reference_time` flow through pairing for forecast verification.
 - A crosswalk whose two sides share a series table (e.g. two NWM forecast ranges): `pair.relation`
