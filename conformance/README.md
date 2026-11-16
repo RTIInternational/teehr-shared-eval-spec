@@ -30,4 +30,11 @@ cases/<name>/
 - an off-list expression is rejected, including a bare `log`;
 - `ln` and `log10` give the same values on both engines;
 - a ramp threshold given in K and in Cel scores the same events (scale-only conversion);
-- sketch quantiles at levels that fall between and on bucket boundaries (the quantile definition).
+- sketch quantiles at levels that fall between and on bucket boundaries (the quantile definition);
+- bootstrap draws: for a seed, group key, method, block, `n` and `reps`, the exact blocks
+  (`standards/bootstrap.md`; tests the random streams alone, no metrics);
+- bootstrap from given draws: both systems take the same unit weights and give identical intervals
+  (tests the metrics and quantiles without the random streams);
+- `year_block` with water years across a partial year, and a group under `min_years`;
+- a `stationary` replicate that needs extra draws from `more`;
+- day and month blocks: a bootstrap from state equals one from pairs.

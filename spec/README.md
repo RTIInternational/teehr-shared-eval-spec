@@ -80,8 +80,8 @@ expression is still open (`spec/expressions.md`).
 - **`aggregate`**: one or more blocks of `group_by` + `metrics`. A metric is a name or an object
   with parameters. `skill` scores against a `reference` dataset.
 - **`bootstrap`**: optional, on an aggregate block: `method` (`iid`, `circular_block`,
-  `stationary`), `block` (ISO 8601), `reps`, `seed`; resamples metric-state chunks
-  (`standards/metric-state.md`).
+  `stationary`, `year_block`), `block` (ISO 8601 days or months, or rows), `reps`, `seed`,
+  `quantiles`; the procedure is pinned in `standards/bootstrap.md`.
 - **`output`**: `unit`, the evaluation unit (defaults to the primary's unit; `standards/units.md`),
   `include_pairs`, and geometry/attributes for a geospatial group key.
 - **`periods`**: optional; inline definitions of any non-shared period the spec names
@@ -116,7 +116,7 @@ draft and VeriRace v1 differed (`DECISIONS.md`):
 | --- | --- |
 | `version` | starts at `1` |
 | metric names | one canonical name per metric (teehr's long form, e.g. `nash_sutcliffe_efficiency`), plus frozen aliases (`nse`, `kge`, ...) accepted wherever a spec names a metric; results are always labelled with the canonical name (`standards/metrics.md`) |
-| `bootstrap` | on the aggregate stage (VeriRace's shape): `method`, `block`, `reps`, `seed`; method names `iid`, `circular_block`, `stationary` (the last two as in teehr). Open: whether VeriRace's `year_block` is teehr's `gumboot` |
+| `bootstrap` | on the aggregate stage (VeriRace's shape): `method`, `block`, `reps`, `seed`; methods `iid`, `circular_block`, `stationary`, `year_block` (alias `gumboot`); the procedure in `standards/bootstrap.md` |
 | durations | ISO 8601 everywhere (`PT6H`, `PT30M`, `P1D`, `P1M`) |
 | window columns on pairs | one `period_start`, `period_end`: values only pair when their windows are equal, so per-side columns would always match |
 
@@ -126,8 +126,6 @@ rules; its entries are seeded from teehr's definitions, then reconciled with Ver
 
 ## Open
 
-- How a bootstrap interval is asked for (VeriRace's level vs teehr's `quantiles`), and whether
-  `year_block` is teehr's `gumboot`.
 
 - Generated secondary inputs (persistence, climatology, blend): VeriRace has them; v0 or later?
 - How `member` and `reference_time` flow through pairing for forecast verification.
