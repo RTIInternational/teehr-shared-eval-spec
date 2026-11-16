@@ -16,5 +16,6 @@
   stage; one pair of window columns; snapping for mergeable metrics; allow-list additions. Adds
   `DECISIONS.md` and the authorship conventions in `GOVERNANCE.md`.
 
+- `standards/metrics.md` (draft): canonical metric names with frozen aliases, definitions, parameters and which merge from state; open items listed under "To decide", with TEEHR's proposed calls.
 - Seeded from the TEEHR design docs agreed with VeriRace so far (shared contract v0, spec schema
   v0, ADR-0012 periods, data model v1).
