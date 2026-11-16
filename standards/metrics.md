@@ -20,6 +20,18 @@
 `obs` is the primary value, `pred` the secondary. Means are over pairs; `std` is the
 population standard deviation.
 
+**Parameters every metric takes** (both change numbers):
+
+- `transform`: applied to both sides before the metric (none by default).
+- `add_epsilon`: adds a tiny epsilon to denominators, so a zero denominator gives a large value
+  instead of NaN (false by default).
+
+**Result units:** a metric of values (`mean_error`, `mean_absolute_error`,
+`root_mean_square_error`, `max_value_delta`, `minimum`, `maximum`, `average`, `sum`,
+`ensemble_spread`, `mean_crps_ensemble`, interval widths and scores) is in the evaluation unit
+(`output.unit`); `mean_square_error` and `variance` in its square; `max_value_time_delta` in
+seconds; counts, ratios, scores and correlations have none.
+
 ## Deterministic
 
 | Canonical | Aliases | Definition | Parameters | Merges |
@@ -30,13 +42,13 @@ population standard deviation.
 | `mean_square_error` | `mse`, `mean_squared_error` | mean((pred − obs)²) | | yes |
 | `root_mean_square_error` | `rmse` | sqrt(mean((pred − obs)²)) | | yes |
 | `max_value_delta` | | max(pred) − max(obs) | | yes |
-| `relative_bias` | | sum(pred − obs) / sum(obs) | | yes |
+| `relative_bias` | `relbias` | sum(pred − obs) / sum(obs) | | yes |
 | `mean_absolute_relative_error` | | sum(\|pred − obs\|) / sum(obs) | | yes |
-| `multiplicative_bias` | | mean(pred) / mean(obs) | | yes |
+| `multiplicative_bias` | `multbias`, `relative_mean`, `relmean` | mean(pred) / mean(obs) | | yes |
 | `relative_median` | | median(pred) / median(obs) | | yes (sketch) |
 | `relative_minimum` | `relative_min` | min(pred) / min(obs) | | yes |
 | `relative_maximum` | `relative_max` | max(pred) / max(obs) | | yes |
-| `relative_standard_deviation` | `relative_std` | std(pred) / std(obs) | | yes |
+| `relative_standard_deviation` | `relative_std`, `relstd`, `variability_ratio`, `vr` | std(pred) / std(obs) | | yes |
 | `mean_absolute_percentage_error` | `mape` | 100 · mean(\|pred − obs\| / \|obs\|), over obs ≠ 0 | | yes |
 | `symmetric_mean_absolute_percentage_error` | `smape` | 100 · mean(2\|pred − obs\| / (\|obs\| + \|pred\|)) | | yes |
 | `normalized_mean_absolute_error` | `nmae` | MAE / normalizer | `normalize_by`: `mean_primary` (default), `range_primary`, `{value, unit}`, `{column}` | yes |
@@ -48,11 +60,11 @@ population standard deviation.
 | `root_mean_standard_deviation_ratio` | `rsr` | RMSE / std(obs) | | yes |
 | `nash_sutcliffe_efficiency` | `nse` | 1 − sum((pred − obs)²) / sum((obs − mean(obs))²) | | yes |
 | `nash_sutcliffe_efficiency_normalized` | `nnse` | 1 / (2 − NSE) | | yes |
-| `kling_gupta_efficiency` | `kge` | 1 − sqrt((r−1)² + (α−1)² + (β−1)²), α = std ratio, β = mean ratio (Gupta et al. 2009) | | yes |
-| `kling_gupta_efficiency_mod1` | `kge_2012` | as KGE with α the ratio of coefficients of variation (Kling et al. 2012) | | yes |
-| `kling_gupta_efficiency_mod2` | `kge_2021` | 1 − sqrt((r−1)² + (α−1)² + β²), β = (mean(pred) − mean(obs)) / std(obs) (Tang et al. 2021) | | yes |
-| `max_value_time_delta` | | time of max(pred) − time of max(obs), in hours | | yes |
-| `annual_peak_flow_bias` | `annual_peak_relative_bias` | sum over years of (annual max(pred) − annual max(obs)) / sum of annual max(obs) | `water_year_month` (default 1) | no |
+| `kling_gupta_efficiency` | `kge` | 1 − sqrt(sr·(r−1)² + sa·(α−1)² + sb·(β−1)²), α = std ratio, β = mean ratio (Gupta et al. 2009); NaN if std(pred) or std(obs) is 0 | `sr`, `sa`, `sb`: weights on the three terms (default 1 each) | yes |
+| `kling_gupta_efficiency_mod1` | `kge_2012`, `kge_mod1` | as KGE with α the ratio of coefficients of variation (Kling et al. 2012) | `sr`, `sa`, `sb`: weights on the three terms (default 1 each) | yes |
+| `kling_gupta_efficiency_mod2` | `kge_2021`, `kge_mod2` | 1 − sqrt(sr·(r−1)² + sa·(α−1)² + sb·β²), β = (mean(pred) − mean(obs)) / std(obs) (Tang et al. 2021) | `sr`, `sa`, `sb`: weights on the three terms (default 1 each) | yes |
+| `max_value_time_delta` | | time of max(pred) − time of max(obs), in seconds | | yes |
+| `annual_peak_flow_bias` | `annual_peak_relative_bias` | sum over years of (annual max(pred) − annual max(obs)) / sum of annual max(obs) | `year_start_month` (default 1, calendar years; 10 for US water years) | no |
 
 ## Categorical (an event is a value ≥ `threshold`)
 
@@ -102,17 +114,19 @@ All take `threshold` (`{value, unit}`, `{quantile}` or `{column}`) and merge fro
 
 ## To decide
 
-- **`variability_ratio`:** TEEHR defines it as std(pred) / std(obs), the same as its
-  `relative_standard_deviation`; VeriRace as the ratio of coefficients of variation (KGE 2012's
-  γ). Proposed: drop the name, since `relative_standard_deviation` covers the first; if the CV
-  ratio is wanted, name it `coefficient_of_variation_ratio`.
-- **`relative_mean`** (TEEHR) is mean(pred) / mean(obs), the same as `multiplicative_bias`.
-  Proposed: make it an alias of `multiplicative_bias`.
-- **`max_value_time_delta`:** VeriRace reports hours; TEEHR a time delta. Proposed: hours, as a
-  number, so it averages and bootstraps like any other metric.
-- **`confusion_matrix`** (TEEHR, one output) and VeriRace's four counts: proposed, the four counts
-  as metrics; a confusion matrix is those four.
-- **TEEHR's `center_of_timing` and `standard_deviation_of_timing`** aren't in VeriRace yet; listed
-  for completeness once defined here.
-- **Defaults that change numbers:** `annual_peak_flow_bias`'s `water_year_month` (VeriRace 1);
-  CRPS's estimator (VeriRace `standard`); the event rule (≥, not >).
+TEEHR's proposed calls (TEEHR has final say; they become decisions once VeriRace accepts, in
+`DECISIONS.md`):
+
+- **`variability_ratio`:** an alias of `relative_standard_deviation` (teehr defines both as
+  std(pred) / std(obs)). Not dropped: teehr has shipped the name, and aliases are never removed.
+  The CV ratio, if wanted, is a new metric, `coefficient_of_variation_ratio`.
+- **`relative_mean`:** an alias of `multiplicative_bias` (VeriRace's proposal, accepted).
+- **`max_value_time_delta`:** seconds, as a number (teehr's existing results don't change).
+- **`confusion_matrix`:** the four counts as metrics (VeriRace's proposal, accepted).
+- **teehr's short names as aliases**, lowercased, where unambiguous: `relbias`, `multbias`,
+  `relmean`, `relstd`, `vr`, `kge_mod1`, `kge_mod2`. Not `r` or `r2`: too easy to collide.
+- **`center_of_timing`, `standard_deviation_of_timing`** (teehr): defined here when VeriRace adds
+  them.
+- **Defaults that change numbers:** `annual_peak_flow_bias`'s `year_start_month` 1 (teehr's
+  calendar-year behaviour); CRPS's estimator `standard`; events are values `≥` the threshold; KGE
+  weights 1; `transform` none; `add_epsilon` false.
