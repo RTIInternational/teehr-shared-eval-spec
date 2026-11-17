@@ -1,0 +1,33 @@
+version: 1
+name: thresholds
+inputs:
+  primary:
+    dataset: obs
+  secondary:
+    dataset: sim
+pair:
+  relation: xw
+aggregate:
+- group_by:
+  - primary_series_key
+  metrics:
+  - name: hits
+    threshold:
+      value: 4.5
+      unit: m3/s
+    as: hits_m3s
+  - name: hits
+    threshold:
+      value: 158.91600024669864
+      unit: '[cft_i]/s'
+    as: hits_cfs
+  - name: false_alarms
+    threshold:
+      value: 4.5
+      unit: m3/s
+    as: fa_m3s
+  - name: false_alarms
+    threshold:
+      value: 158.91600024669864
+      unit: '[cft_i]/s'
+    as: fa_cfs

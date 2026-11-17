@@ -1,0 +1,17 @@
+datasets:
+  obs:
+    role: observed
+    unit: m3/s
+    variable: streamflow
+    statistic: inst
+    file: obs.parquet
+  sim:
+    role: simulated
+    unit: '[cft_i]/s'
+    variable: streamflow
+    statistic: inst
+    file: sim.parquet
+  xw:
+    role: auxiliary
+    kind: crosswalk
+    file: xw.parquet

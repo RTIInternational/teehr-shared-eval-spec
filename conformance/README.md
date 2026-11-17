@@ -1,6 +1,8 @@
 # Conformance cases
 
-*Proposed layout; no cases yet.*
+- **Status:** first cases added 2026-11-17. Run by teehr-core's CI with its engine (`python -m
+  teehr_core.conformance conformance/cases`); a system runs them with its own `evaluate` through
+  the same runner (`teehr_core.conformance.run_cases`).
 
 Cases both systems run in CI. A disagreement between systems shows up as a failing case, not an
 email thread.
@@ -9,25 +11,46 @@ email thread.
 
 ```
 cases/<name>/
-  case.yaml        what it checks, and the contract_version it was added in
+  case.yaml        description, added (date); optional tolerance, keys
   spec.yaml        the evaluation spec (or invalid-spec.yaml for a rejection case)
-  inputs/          datasets as Parquet, plus their dataset-level metadata
-  expected/        results as Parquet, or expected-error.json for a rejection case
+  inputs/          datasets.yaml and its Parquet files
+  expected/        results.parquet, or error.yaml for a rejection case
+units.csv          the unit table every case uses (UCUM; aliases separated by |)
 ```
+
+Periods are `standards/periods.csv`.
+
+`inputs/datasets.yaml` lists each dataset under `datasets` with `role` (`observed`, `simulated`,
+`forecast`, `auxiliary`), `file`, and as applicable `series_file`, `variable`, `unit`, `statistic`,
+`period`, `kind` (`crosswalk`). The files follow `standards/timeseries.md` (and the data model's
+series, layer and crosswalk shapes).
+
+`expected/results.parquet` is the final stage's table. `expected/error.yaml` gives `about`: a word
+the refusal's message must contain (messages differ between systems; the refusal doesn't).
 
 ## Comparing results
 
-- Counts and `components` metrics: exact.
+- Rows are matched on `keys` (default: the stages' `group_by` columns); row order doesn't matter.
+  The columns must be the same.
+- Null and NaN are alike; integers, strings and times compare exactly.
+- Floating-point results: within the relative `tolerance` from `case.yaml`, default 1e-12.
 - Sketch quantiles: identical across paths, and within 0.1% of the true value.
-- Other floating-point results: within `tolerance` from `case.yaml` (relative), default 1e-12.
 
-## First cases to add
+## Cases
+
+| Case | Checks |
+| --- | --- |
+| `hydro_metrics`, `energy_metrics` | every metric the fixture specs ask for, on real data with gaps, through a crosswalk, with units converted at pairing |
+| `undefined_results` | constant observations and a single pair give null NSE, KGE and Pearson; missing secondary values leave their pairs out |
+| `threshold_units` | the same threshold in `m3/s` and `[cft_i]/s` gives the same counts |
+| `reject_bare_threshold` | a threshold without a unit is refused |
+| `reject_bare_log` | one-argument `log()` is refused |
+
+## Cases to add
 
 - path independence: pairs vs merged state vs bootstrap-from-state, each metric family;
-- unit conversion: the same threshold in `[cft_i]/s` and `m3/s` gives identical counts;
-- a bare-number threshold is rejected;
 - period pairing: `hour_starting` vs `hour_ending` don't pair; calendar spans across Jan 1;
-- an off-list expression is rejected, including a bare `log`;
+- an off-list expression is rejected (a bare `log` is done);
 - `ln` and `log10` give the same values on both engines;
 - a ramp threshold given in K and in Cel scores the same events (scale-only conversion);
 - sketch quantiles at levels that fall between and on bucket boundaries (the quantile definition);
@@ -38,3 +61,8 @@ cases/<name>/
 - `year_block` with water years across a partial year, and a group under `min_years`;
 - a `stationary` replicate that needs extra draws from `more`;
 - day and month blocks: a bootstrap from state equals one from pairs.
+
+## Open
+
+- A series with no complete pairs (every secondary value missing): no result row (teehr-core's
+  engine today), or a row with `count` 0 and the rest null? Not in a case until decided.

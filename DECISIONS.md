@@ -9,6 +9,8 @@ proposed and who agreed (see `GOVERNANCE.md`).
 
 | Date | Topic | Decision | By | Accepted | Where |
 | --- | --- | --- | --- | --- | --- |
+| 2026-11-17 | Conformance cases | The case layout and comparison rules in `conformance/README.md`; cases run by both systems through teehr-core's runner (`teehr_core.conformance`), each with its own `evaluate`; `conformance/units.csv` is the cases' unit table | TEEHR | | #11 |
+| 2026-11-17 | Repository public | teehr-shared-eval-spec is public (MIT), so teehr-core's CI can run the cases | TEEHR | | #11 |
 | 2026-11-17 | Timing metrics | `center_of_timing` and `standard_deviation_of_timing` as teehr defines them (daily means, years from `year_start_month`, default 10; `missing_day_threshold`, default 0.1), over complete pairs; in days | TEEHR | | #10 |
 | 2026-11-17 | `add_epsilon` dropped | No `add_epsilon` (replaces the #4 row): undefined results are null with a `null_reason`, not large finite values, and a fixed `1e-6` depends on the unit. Zeros under `log` / `reciprocal` take a transform `offset`, a `{value, unit}` added to both sides first | TEEHR | | #9 |
 | 2026-11-16 | Comparison of teehr and the core | Where teehr and teehr-core (VeriRace's metrics) differ on the same inputs, the core's definition is the shared one; teehr's bugs (Spearman's ddof, NSE's sum-is-zero guard) are fixed in teehr | TEEHR | VeriRace | #8, teehr#873 |

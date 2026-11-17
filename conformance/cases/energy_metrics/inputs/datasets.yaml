@@ -1,0 +1,23 @@
+fixture: energy
+seed: 20261010
+datasets:
+  load_actual:
+    role: observed
+    file: load_actual.parquet
+    series_file: load_actual__series.parquet
+    variable: load
+    unit: MW
+    statistic: mean
+    period: hour_starting
+    source: synthetic (scripts/fixtures/build_energy_fixture.py)
+  load_dayahead:
+    role: forecast
+    file: load_dayahead.parquet
+    series_file: load_dayahead__series.parquet
+    variable: load
+    unit: MW
+    statistic: mean
+    period: hour_starting
+    source: synthetic (scripts/fixtures/build_energy_fixture.py)
+pairing:
+  on_attribute: zone

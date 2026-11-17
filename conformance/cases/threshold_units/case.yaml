@@ -1,0 +1,3 @@
+description: 'A threshold carries its unit: the same threshold in m3/s and in [cft_i]/s gives the same
+  counts, with the secondary dataset stored in [cft_i]/s (converted at pairing).'
+added: '2026-11-17'

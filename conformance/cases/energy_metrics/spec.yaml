@@ -1,0 +1,128 @@
+version: 1
+name: energy-by-location
+inputs:
+  primary:
+    dataset: load_actual
+  secondary:
+  - dataset: load_dayahead
+pair:
+  on_attribute: zone
+aggregate:
+- group_by:
+  - primary_series_key
+  - secondary_dataset
+  metrics:
+  - count
+  - mean_error
+  - mean_absolute_error
+  - mean_squared_error
+  - rmse
+  - max_value_delta
+  - relative_bias
+  - mean_absolute_relative_error
+  - multiplicative_bias
+  - relative_median
+  - relative_min
+  - relative_max
+  - relative_std
+  - mape
+  - smape
+  - nmae
+  - nrmse
+  - pearson_r
+  - spearman_r
+  - r_squared
+  - coefficient_of_variation_ratio
+  - rsr
+  - nse
+  - nnse
+  - kge
+  - kge_2012
+  - kge_2021
+  - name: hits
+    threshold:
+      primary_quantile: 0.75
+    as: hits_q75
+  - name: misses
+    threshold:
+      primary_quantile: 0.75
+    as: misses_q75
+  - name: false_alarms
+    threshold:
+      primary_quantile: 0.75
+    as: false_alarms_q75
+  - name: correct_negatives
+    threshold:
+      primary_quantile: 0.75
+    as: correct_negatives_q75
+  - name: probability_of_detection
+    threshold:
+      primary_quantile: 0.75
+    as: probability_of_detection_q75
+  - name: probability_of_false_detection
+    threshold:
+      primary_quantile: 0.75
+    as: probability_of_false_detection_q75
+  - name: false_alarm_ratio
+    threshold:
+      primary_quantile: 0.75
+    as: false_alarm_ratio_q75
+  - name: critical_success_index
+    threshold:
+      primary_quantile: 0.75
+    as: critical_success_index_q75
+  - name: success_ratio
+    threshold:
+      primary_quantile: 0.75
+    as: success_ratio_q75
+  - name: frequency_bias_index
+    threshold:
+      primary_quantile: 0.75
+    as: frequency_bias_index_q75
+  - name: normalized_mean_absolute_error
+    normalize_by: range_primary
+    as: nmae_range
+  - name: normalized_root_mean_square_error
+    normalize_by: range_primary
+    as: nrmse_range
+  - name: minimum
+    side: primary
+  - name: minimum
+    side: secondary
+  - name: maximum
+    side: primary
+  - name: maximum
+    side: secondary
+  - name: average
+    side: primary
+  - name: average
+    side: secondary
+  - name: sum
+    side: primary
+  - name: sum
+    side: secondary
+  - name: variance
+    side: primary
+  - name: variance
+    side: secondary
+  - name: flow_duration_curve_slope
+    side: primary
+  - name: flow_duration_curve_slope
+    side: secondary
+  - name: max_value_time
+    side: primary
+  - name: max_value_time
+    side: secondary
+  - name: mean_crps_ensemble
+  - name: mean_crps_ensemble
+    estimator: fair
+    as: crps_fair
+  - name: mean_brier_score
+    threshold:
+      primary_quantile: 0.75
+    as: mean_brier_score_q75
+  - name: max_value_time_delta
+  - name: annual_peak_flow_bias
+  - name: annual_peak_flow_bias
+    year_start_month: 10
+    as: annual_peak_flow_bias_wy

@@ -1,0 +1,16 @@
+symbol,dimension,to_si,offset,description,aliases
+m3/s,volume_flow,1.0,0.0,cubic metres per second,cms
+[cft_i]/s,volume_flow,0.028316846592,0.0,cubic feet per second,cfs|ft3/s
+L/s,volume_flow,0.001,0.0,litres per second,
+m,length,1.0,0.0,metres,
+[ft_i],length,0.3048,0.0,feet,ft
+mm,length,0.001,0.0,millimetres,
+[in_i],length,0.0254,0.0,inches,in
+W,power,1.0,0.0,watts,
+kW,power,1000.0,0.0,kilowatts,
+MW,power,1000000.0,0.0,megawatts,
+GW,power,1000000000.0,0.0,gigawatts,
+K,temperature,1.0,0.0,kelvin,
+Cel,temperature,1.0,273.15,degrees Celsius,degC
+[degF],temperature,0.5555555555555556,255.37222222222223,degrees Fahrenheit,degF
+1,dimensionless,1.0,0.0,dimensionless,

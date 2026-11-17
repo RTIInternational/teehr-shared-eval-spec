@@ -1,0 +1,15 @@
+version: 1
+name: log
+inputs:
+  primary:
+    dataset: obs
+  secondary:
+    dataset: sim
+pair:
+  relation: xw
+aggregate:
+- group_by:
+  - primary_series_key
+  metrics:
+  - count
+filter: log(primary_value) > 0

@@ -1,0 +1,3 @@
+description: 'One-argument log() is refused (base 10 in some engines, natural in others): use ln() or
+  log10().'
+added: '2026-11-17'

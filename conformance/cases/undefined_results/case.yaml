@@ -1,0 +1,3 @@
+description: 'Undefined results are null: constant observations (NSE, KGE, Pearson), one pair (Pearson,
+  KGE). Missing secondary values leave their pairs out (count 2 of 4). A control series is defined throughout.'
+added: '2026-11-17'
