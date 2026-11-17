@@ -9,6 +9,10 @@ proposed and who agreed (see `GOVERNANCE.md`).
 
 | Date | Topic | Decision | By | Accepted | Where |
 | --- | --- | --- | --- | --- | --- |
+| 2026-11-16 | Comparison of teehr and the core | Where teehr and teehr-core (VeriRace's metrics) differ on the same inputs, the core's definition is the shared one; teehr's bugs (Spearman's ddof, NSE's sum-is-zero guard) are fixed in teehr | TEEHR | | #8, teehr#873 |
+| 2026-11-16 | `success_ratio` | hits / (hits + false_alarms); teehr's calculation, (hits + correct_negatives) / count, becomes `proportion_correct` (alias `accuracy`) | TEEHR | | #8 |
+| 2026-11-16 | `flow_duration_curve_slope` | the log form (Sawicz et al. 2011) over exceedances [0.33, 0.66]; `log: false` gives the linear slope; Weibull plotting position i / (n + 1) with i from 1 | TEEHR | | #8 |
+| 2026-11-16 | Signatures with gaps | computed over complete pairs, the same sample as every other metric | TEEHR | | #8 |
 | 2026-11-16 | Upload contract | `standards/uploads.md`: four steps, kinds and formats (Shapefile, GeoPackage), statuses with `awaiting_file` and cancel, the preview (`needed`, `notes`, `ingest`), all problems at once, mapping fields named for their column (wide files, `time_format`, explicit `timezone`, `location_key`, `left` / `right`), result fields | TEEHR | VeriRace | #6 |
 | 2026-11-16 | Layer geometry exchange | WKB in EPSG:4326 in `geometry`: GeoArrow in Arrow, GeoParquet in Parquet, GeoJSON in JSON and as a FeatureCollection (`id` = `location_key`), `bbox` | TEEHR | VeriRace | #6 |
 | 2026-11-16 | Error entries | 422 `errors` entries `{loc, msg, type}`, `loc` starting `body` / `query` / `path`; shared `code` `token_refresh_required` | TEEHR | VeriRace | #6 |

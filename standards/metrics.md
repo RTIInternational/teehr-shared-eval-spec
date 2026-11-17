@@ -100,8 +100,12 @@ All take `threshold` (`{value, unit}`, `{quantile}` or `{column}`) and merge fro
 | `critical_success_index` | `csi` | hits / (hits + misses + false_alarms) |
 | `success_ratio` | | hits / (hits + false_alarms) |
 | `frequency_bias_index` | `frequency_bias` | (hits + false_alarms) / (hits + misses) |
+| `proportion_correct` | `accuracy` | (hits + correct_negatives) / count |
 
 ## Signatures (of one side: `side`, default primary)
+
+A signature is computed over the group's complete pairs (both sides present), the same sample
+every other metric uses, not over all of that side's own values.
 
 | Canonical | Aliases | Definition | Merges |
 | --- | --- | --- | --- |
@@ -111,7 +115,7 @@ All take `threshold` (`{value, unit}`, `{quantile}` or `{column}`) and merge fro
 | `sum` | `sum_value` | sum | yes |
 | `variance` | | population variance | yes |
 | `max_value_time` | | time of the max (earliest if repeated) | yes |
-| `flow_duration_curve_slope` | `fdc_slope` | (ln Q(e1) − ln Q(e2)) / (e2 − e1), `exceedance` [e1, e2] default [0.33, 0.66] | yes (sketch) |
+| `flow_duration_curve_slope` | `fdc_slope` | (ln Q(e1) − ln Q(e2)) / (e2 − e1), `exceedance` [e1, e2] default [0.33, 0.66] (Sawicz et al. 2011); with `log: false`, (Q(e1) − Q(e2)) / (e2 − e1). Q(e) is the flow exceeded with probability e, Weibull plotting position i / (n + 1), i = 1 … n | yes (sketch) |
 
 ## Probabilistic
 
