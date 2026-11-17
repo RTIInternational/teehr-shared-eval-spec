@@ -1,0 +1,15 @@
+version: 1
+name: empty
+inputs:
+  primary:
+    dataset: obs
+  secondary:
+    dataset: sim
+pair:
+  relation: xw
+aggregate:
+- group_by:
+  - primary_series_key
+  metrics:
+  - count
+  - root_mean_square_error

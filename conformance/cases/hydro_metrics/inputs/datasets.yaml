@@ -1,0 +1,32 @@
+fixture: hydro
+built_at: '2026-10-11T02:49:37+00:00'
+datasets:
+  usgs_streamflow:
+    role: observed
+    file: usgs_streamflow.parquet
+    series_file: usgs_streamflow__series.parquet
+    variable: streamflow
+    unit: '[cft_i]/s'
+    statistic: inst
+    source: USGS NWIS instantaneous values, parameter 00060 (provisional)
+  nwm31_short_range:
+    role: forecast
+    file: nwm31_short_range.parquet
+    series_file: nwm31__series.parquet
+    variable: streamflow
+    unit: m3/s
+    statistic: inst
+    source: NOAA NWM v3 short_range channel_rt, https://noaa-nwm-pds.s3.amazonaws.com
+  nwm31_medium_range_mem1:
+    role: forecast
+    file: nwm31_medium_range_mem1.parquet
+    series_file: nwm31__series.parquet
+    variable: streamflow
+    unit: m3/s
+    statistic: inst
+    source: NOAA NWM v3 medium_range_mem1 channel_rt, https://noaa-nwm-pds.s3.amazonaws.com
+  usgs_nwm31_crosswalk:
+    role: auxiliary
+    kind: crosswalk
+    file: usgs_nwm31_crosswalk.parquet
+    source: USGS NLDI (nwissite -> NHDPlusV2 COMID == NWM CONUS feature_id)
