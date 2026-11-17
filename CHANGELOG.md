@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- `metrics.md`: `add_epsilon` dropped (replaces the #4 decision); a transform takes an
+  `offset` (`{value, unit}`) for zeros under `log` / `reciprocal`. `#8`'s decisions marked accepted.
 - `metrics.md`: `proportion_correct`; `flow_duration_curve_slope`'s `log` option and plotting position;
   signatures over complete pairs (from comparing teehr with teehr-core).
 - `data-api.md`: TEEHR's `/data` `filter` is now the shared expression language.

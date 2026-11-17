@@ -39,10 +39,16 @@ population standard deviation.
   it's meaningless there (an increasing transform doesn't change which values are events;
   `reciprocal` flips them). A spec that asks for one is refused.
 
-**`add_epsilon`** (default false) adds `1e-6`, in the evaluation unit (`output.unit`), to every
-denominator, and to both sides before `log` and `reciprocal`, so a zero gives a large finite value
-instead of an undefined one. The spec fixes the evaluation unit, so the result is the same on both
-systems.
+**`offset`** (with a transform, default none) is added to both sides before the transform, so zeros
+can be kept where they'd be undefined: `log(x + c)` for flows with zero days. It's a `{value, unit}`
+(`units.md`), converted to the evaluation unit by scale alone.
+
+```yaml
+transform: {name: log, offset: {value: 0.01, unit: "m3/s"}}
+```
+
+There is no `add_epsilon`: a zero denominator gives null (with the guard's `null_reason`), not a
+large finite value.
 
 **Result units:** a metric of values (`mean_error`, `mean_absolute_error`,
 `root_mean_square_error`, `max_value_delta`, `minimum`, `maximum`, `average`, `sum`,
@@ -140,7 +146,7 @@ Recorded in `DECISIONS.md` (2026-11-16): the canonical names and aliases above, 
 `variability_ratio` → `relative_standard_deviation` (VeriRace's CV-ratio metric becomes
 `coefficient_of_variation_ratio`) and `relative_mean` → `multiplicative_bias`; the four counts in
 place of `confusion_matrix`; `max_value_time_delta` in seconds; `year_start_month` (default 1) for
-`annual_peak_flow_bias`; the KGE weights; the transforms and `add_epsilon` as above; result units;
+`annual_peak_flow_bias`; the KGE weights; the transforms and their `offset` as above (no `add_epsilon`); result units;
 events are values `≥` the threshold; CRPS's default estimator `standard`.
 
 ## Open

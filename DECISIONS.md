@@ -9,10 +9,11 @@ proposed and who agreed (see `GOVERNANCE.md`).
 
 | Date | Topic | Decision | By | Accepted | Where |
 | --- | --- | --- | --- | --- | --- |
-| 2026-11-16 | Comparison of teehr and the core | Where teehr and teehr-core (VeriRace's metrics) differ on the same inputs, the core's definition is the shared one; teehr's bugs (Spearman's ddof, NSE's sum-is-zero guard) are fixed in teehr | TEEHR | | #8, teehr#873 |
-| 2026-11-16 | `success_ratio` | hits / (hits + false_alarms); teehr's calculation, (hits + correct_negatives) / count, becomes `proportion_correct` (alias `accuracy`) | TEEHR | | #8 |
-| 2026-11-16 | `flow_duration_curve_slope` | the log form (Sawicz et al. 2011) over exceedances [0.33, 0.66]; `log: false` gives the linear slope; Q(e) is the quantile at level 1 − e by the shared quantile definition (snapped), not a plotting position | TEEHR | | #8 |
-| 2026-11-16 | Signatures with gaps | computed over complete pairs, the same sample as every other metric | TEEHR | | #8 |
+| 2026-11-17 | `add_epsilon` dropped | No `add_epsilon` (replaces the #4 row): undefined results are null with a `null_reason`, not large finite values, and a fixed `1e-6` depends on the unit. Zeros under `log` / `reciprocal` take a transform `offset`, a `{value, unit}` added to both sides first | TEEHR | | #9 |
+| 2026-11-16 | Comparison of teehr and the core | Where teehr and teehr-core (VeriRace's metrics) differ on the same inputs, the core's definition is the shared one; teehr's bugs (Spearman's ddof, NSE's sum-is-zero guard) are fixed in teehr | TEEHR | VeriRace | #8, teehr#873 |
+| 2026-11-16 | `success_ratio` | hits / (hits + false_alarms); teehr's calculation, (hits + correct_negatives) / count, becomes `proportion_correct` (alias `accuracy`) | TEEHR | VeriRace | #8 |
+| 2026-11-16 | `flow_duration_curve_slope` | the log form (Sawicz et al. 2011) over exceedances [0.33, 0.66]; `log: false` gives the linear slope; Q(e) is the quantile at level 1 − e by the shared quantile definition (snapped), not a plotting position | TEEHR | VeriRace | #8 |
+| 2026-11-16 | Signatures with gaps | computed over complete pairs, the same sample as every other metric | TEEHR | VeriRace | #8 |
 | 2026-11-16 | Upload contract | `standards/uploads.md`: four steps, kinds and formats (Shapefile, GeoPackage), statuses with `awaiting_file` and cancel, the preview (`needed`, `notes`, `ingest`), all problems at once, mapping fields named for their column (wide files, `time_format`, explicit `timezone`, `location_key`, `left` / `right`), result fields | TEEHR | VeriRace | #6 |
 | 2026-11-16 | Layer geometry exchange | WKB in EPSG:4326 in `geometry`: GeoArrow in Arrow, GeoParquet in Parquet, GeoJSON in JSON and as a FeatureCollection (`id` = `location_key`), `bbox` | TEEHR | VeriRace | #6 |
 | 2026-11-16 | Error entries | 422 `errors` entries `{loc, msg, type}`, `loc` starting `body` / `query` / `path`; shared `code` `token_refresh_required` | TEEHR | VeriRace | #6 |
@@ -27,7 +28,7 @@ proposed and who agreed (see `GOVERNANCE.md`).
 | 2026-11-16 | Year parameter | `year_start_month` (calendar years at 1, US water years at 10), for `annual_peak_flow_bias` (default 1) and `year_block`; `year_block` stays the method name, `gumboot` an alias | TEEHR | VeriRace | #4 |
 | 2026-11-16 | KGE weights | `sr`, `sa`, `sb` (default 1); NaN when either std is 0, whatever the weights | TEEHR | VeriRace | #4 |
 | 2026-11-16 | Transforms | `log` (natural), `sqrt`, `square`, `cube`, `exp`, `reciprocal` (alias `inv`), `abs`; undefined pairs left out; none on contingency, Brier, ensemble and rank metrics | VeriRace (list: TEEHR) | both | #4 |
-| 2026-11-16 | `add_epsilon` | `1e-6` in the evaluation unit, to denominators and before `log` / `reciprocal` | VeriRace | TEEHR | #4 |
+| 2026-11-16 | `add_epsilon` | `1e-6` in the evaluation unit, to denominators and before `log` / `reciprocal`. **Replaced 2026-11-17 (#9): dropped** | VeriRace | TEEHR | #4 |
 | 2026-11-16 | Result units | Evaluation unit, its square, seconds, or none, per metric | TEEHR | VeriRace | #4 |
 | 2026-11-16 | Event rule, CRPS default | Events are values `≥` the threshold; CRPS estimator `standard` | VeriRace | TEEHR | #4 |
 | 2026-11-16 | Metric names | One canonical name per metric (teehr's long form); frozen aliases (`nse`, `kge`, ...) accepted in specs; results labelled with the canonical name | TEEHR | VeriRace | #3, `standards/metrics.md` |
