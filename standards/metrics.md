@@ -115,7 +115,7 @@ every other metric uses, not over all of that side's own values.
 | `sum` | `sum_value` | sum | yes |
 | `variance` | | population variance | yes |
 | `max_value_time` | | time of the max (earliest if repeated) | yes |
-| `flow_duration_curve_slope` | `fdc_slope` | (ln Q(e1) − ln Q(e2)) / (e2 − e1), `exceedance` [e1, e2] default [0.33, 0.66] (Sawicz et al. 2011); with `log: false`, (Q(e1) − Q(e2)) / (e2 − e1). Q(e) is the flow exceeded with probability e, Weibull plotting position i / (n + 1), i = 1 … n | yes (sketch) |
+| `flow_duration_curve_slope` | `fdc_slope` | (ln Q(e1) − ln Q(e2)) / (e2 − e1), `exceedance` [e1, e2] default [0.33, 0.66] (Sawicz et al. 2011); with `log: false`, (Q(e1) − Q(e2)) / (e2 − e1). Q(e) is the value exceeded a fraction e of the time: the quantile at level 1 − e by `metric-state.md`'s quantile definition, snapped to sketch buckets | yes (sketch) |
 
 ## Probabilistic
 
