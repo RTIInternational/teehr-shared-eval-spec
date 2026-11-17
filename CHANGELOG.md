@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- `metrics.md`: `proportion_correct`; `flow_duration_curve_slope`'s `log` option and plotting position;
+  signatures over complete pairs (from comparing teehr with teehr-core).
 - `data-api.md`: TEEHR's `/data` `filter` is now the shared expression language.
 - `standards/uploads.md` (agreed): the shared upload contract (steps, kinds, formats, status,
   preview, ingest, mapping fields, result). `data-api.md`: layer geometry exchange (WKB, GeoArrow,
