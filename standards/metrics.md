@@ -54,7 +54,8 @@ large finite value.
 `root_mean_square_error`, `max_value_delta`, `minimum`, `maximum`, `average`, `sum`,
 `ensemble_spread`, `mean_crps_ensemble`, interval widths and scores) is in the evaluation unit
 (`output.unit`); `mean_square_error` and `variance` in its square; `max_value_time_delta` in
-seconds; counts, ratios, scores and correlations have none.
+seconds; `center_of_timing` and `standard_deviation_of_timing` in days; counts, ratios, scores and
+correlations have none.
 
 ## Deterministic
 
@@ -122,6 +123,8 @@ every other metric uses, not over all of that side's own values.
 | `variance` | | population variance | yes |
 | `max_value_time` | | time of the max (earliest if repeated) | yes |
 | `flow_duration_curve_slope` | `fdc_slope` | (ln Q(e1) − ln Q(e2)) / (e2 − e1), `exceedance` [e1, e2] default [0.33, 0.66] (Sawicz et al. 2011); with `log: false`, (Q(e1) − Q(e2)) / (e2 − e1). Q(e) is the value exceeded a fraction e of the time: the quantile at level 1 − e by `metric-state.md`'s quantile definition, snapped to sketch buckets | yes (sketch) |
+| `center_of_timing` | | the flow-weighted mean day of the year, Σ q_d d / Σ q_d, averaged over the years. q_d is a day's mean value (UTC days), d its day of the year from 1 (years start in `year_start_month`, default 10, US water years); days with q_d ≤ 0 are left out, and so is a year with fewer than (1 − `missing_day_threshold`) × its length days present (default 0.1). Null if no year is left | no |
+| `standard_deviation_of_timing` | | the flow-weighted spread of the days around the year's center of timing c, √(Σ q_d (d − c)² / (Σ q_d (n − 1) / n)), averaged over the years; c is wrapped into 1..the year's length, n is the year's days with flow (a year needs n > 1). Days and years as `center_of_timing` | no |
 
 ## Probabilistic
 
@@ -148,7 +151,3 @@ Recorded in `DECISIONS.md` (2026-11-16): the canonical names and aliases above, 
 place of `confusion_matrix`; `max_value_time_delta` in seconds; `year_start_month` (default 1) for
 `annual_peak_flow_bias`; the KGE weights; the transforms and their `offset` as above (no `add_epsilon`); result units;
 events are values `≥` the threshold; CRPS's default estimator `standard`.
-
-## Open
-
-- `center_of_timing`, `standard_deviation_of_timing` (teehr): defined here when VeriRace adds them.

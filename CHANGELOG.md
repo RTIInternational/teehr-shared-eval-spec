@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- `metrics.md`: `center_of_timing` and `standard_deviation_of_timing` (from teehr; in teehr-core).
 - `metrics.md`: `add_epsilon` dropped (replaces the #4 decision); a transform takes an
   `offset` (`{value, unit}`) for zeros under `log` / `reciprocal`. `#8`'s decisions marked accepted.
 - `metrics.md`: `proportion_correct`; `flow_duration_curve_slope`'s `log` option and plotting position;
