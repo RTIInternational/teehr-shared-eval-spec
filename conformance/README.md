@@ -42,6 +42,7 @@ the refusal's message must contain (messages differ between systems; the refusal
 | --- | --- |
 | `hydro_metrics`, `energy_metrics` | every metric the fixture specs ask for, on real data with gaps, through a crosswalk, with units converted at pairing |
 | `undefined_results` | constant observations and a single pair give null NSE, KGE and Pearson; missing secondary values leave their pairs out |
+| `empty_series` | a group exists only if it has at least one complete pair: a series whose secondary values are all missing gets no row |
 | `threshold_units` | the same threshold in `m3/s` and `[cft_i]/s` gives the same counts |
 | `reject_bare_threshold` | a threshold without a unit is refused |
 | `reject_bare_log` | one-argument `log()` is refused |
@@ -61,8 +62,3 @@ the refusal's message must contain (messages differ between systems; the refusal
 - `year_block` with water years across a partial year, and a group under `min_years`;
 - a `stationary` replicate that needs extra draws from `more`;
 - day and month blocks: a bootstrap from state equals one from pairs.
-
-## Open
-
-- A series with no complete pairs (every secondary value missing): no result row (teehr-core's
-  engine today), or a row with `count` 0 and the rest null? Not in a case until decided.
