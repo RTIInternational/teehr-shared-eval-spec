@@ -25,10 +25,12 @@ or partitions them is its own business.
 | `reference_time` | timestamp with zone, not null | forecasts (issue time) |
 | `member` | string, not null | ensembles |
 | `quantile` | 4 decimal places, not null | quantile forecasts |
-| `quality` | string | optional: the source's own code(s), comma-separated |
+| `approval_status` | string | optional: the source's review state of a value, in its own words (e.g. USGS `Provisional`, `Approved`) |
+| `qualifier` | string | optional: the source's own qualifier code(s), comma-separated (e.g. USGS `ESTIMATED,ICE`) |
 | `period_start`, `period_end` | timestamp with zone, not null | `absolute` periods only |
 
-An optional column is either absent from a dataset or never null.
+An optional column is either absent from a dataset or never null, except `approval_status` and
+`qualifier`, which are null where the source gives none.
 
 **Key:** `series_key`, [`reference_time`], `value_time`, [`member`], [`quantile`]: the columns
 present. Duplicate keys in one upload are refused.

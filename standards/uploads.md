@@ -68,7 +68,7 @@ Mapping fields are named for the column they fill.
 
 | Kind | Fields |
 | --- | --- |
-| `timeseries` | `series_key` (a column) or `series_key_value` (one key for every row); `value_time`, `value`; `reference_time`, `member`, `quantile`, `quality`; `location_key`; `layout`: `long` (default) or `wide` with `series_columns` (one value column per series, named by its key); `timezone`; `time_format` |
+| `timeseries` | `series_key` (a column) or `series_key_value` (one key for every row); `value_time`, `value`; `reference_time`, `member`, `quantile`, `approval_status`, `qualifier`; `location_key`; `layout`: `long` (default) or `wide` with `series_columns` (one value column per series, named by its key); `timezone`; `time_format` |
 | `layer` | `location_key`, `name`, `geometry` or `longitude` + `latitude`, `crs`, `source_layer`, `attributes` (`[{column, name?, type?}]`; default every other column) |
 | `crosswalk` | `left_key`, `right_key`, `attributes` (extra columns, as for layers) |
 
@@ -107,7 +107,7 @@ fields of its own (e.g. `seconds`).
 | Leading zeros | CSV read as text | as the standard | a layer CSV is type-sniffed (to be fixed) |
 | Preview | `columns` with `looks_like` and `sample`; `needed`, `notes`, `ingest` | as the standard | `columns` as `{name, type}`; `needs` (bare names), `problems`, `warnings` |
 | Ingest problems | 422 `errors` entries `{loc, msg, type}` | as the standard | plain strings (structured only for request validation) |
-| Timeseries mapping | as above | as the standard | no `series_key_value`, `quality`, `location_key` |
+| Timeseries mapping | as above | as the standard | no `series_key_value`, `approval_status`, `qualifier`, `location_key` |
 | Layer mapping | `location_key`, `name`, `longitude`, `latitude`, `source_layer`, `attributes` | as the standard | `key_column`, `lon`, `lat`; no `name`, `source_layer`; every other column an attribute |
 | Crosswalk mapping | `attributes` | as the standard | none (every other column kept) |
 | Crosswalk dataset sides | `left`, `right` | as the standard | `primary`, `secondary` |
