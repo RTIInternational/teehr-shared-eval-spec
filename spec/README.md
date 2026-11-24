@@ -13,8 +13,8 @@ gives the same result.
 
 - **Declarative.** The spec says *what* to compute; the engine decides *how*.
 - **A source is a dataset.** Each dataset is homogeneous in variable, statistic and period, so an
-  input names the dataset directly. A `filter` narrows within it by time, location, member or
-  quality, never by variable.
+  input names the dataset directly. A `filter` narrows within it by time, location, member,
+  approval status or qualifier, never by variable.
 - **Validated before any run** against the system's datasets, columns, metrics and units.
 - **Units are explicit** on every unit-bearing parameter (`standards/units.md`).
 - **Versioned.** `version` is recorded on every run.

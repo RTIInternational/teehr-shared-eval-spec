@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `timeseries.md`: optional `quality` becomes `qualifier` (the source's codes, comma-separated) and
+  `approval_status` is added (the source's review state, e.g. USGS Provisional/Approved); both may be
+  null. `uploads.md` mapping fields renamed to match; the `hydro_metrics` input carries
+  `approval_status`.
 - `conformance/`: the case format, the first seven cases and their unit table; groups exist only with complete pairs; the repository is public.
 - `metrics.md`: `center_of_timing` and `standard_deviation_of_timing` (from teehr; in teehr-core).
 - `metrics.md`: `add_epsilon` dropped (replaces the #4 decision); a transform takes an
