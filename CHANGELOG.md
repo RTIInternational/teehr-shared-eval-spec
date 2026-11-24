@@ -3,9 +3,11 @@
 ## Unreleased
 
 - `data-api.md`, `units.md`: a `unit` parameter on reads (a timeseries' `value` and run results).
-  Results convert per metric: levels affinely, other evaluation-unit metrics by scale alone, squares
-  by the scale squared, `sum` only between units with equal offsets. The response gives its unit in
-  `X-Unit`. New known differences: `unit` on reads, the unit header and VeriRace's layer routes.
+  Results convert by each metric's kind (value, sum, difference, difference², ratio, time,
+  invariant), with its options, transform and stage, as VeriRace does; columns that can't be
+  converted (an offset under ratios, sums and transforms) give 422 `unit_not_convertible`. The
+  response gives its unit in `X-Unit`. New known differences: `unit` on reads, the unit header and
+  VeriRace's layer routes.
 - `timeseries.md`: optional `quality` becomes `qualifier` (the source's codes, comma-separated) and
   `approval_status` is added (the source's review state, e.g. USGS Provisional/Approved); both may be
   null. `uploads.md` mapping fields renamed to match; the `hydro_metrics` input carries
