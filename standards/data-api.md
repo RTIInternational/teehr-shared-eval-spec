@@ -94,7 +94,6 @@ Every error is RFC 9457 `application/problem+json`:
 | Paging headers | `X-Next-Cursor`, `X-Total-Rows` | as the standard | `X-VeriRace-Next-Cursor`, `X-VeriRace-Total-Rows` |
 | 422 `title` | `Unprocessable Content` | as the standard | `Invalid request` |
 | `code` member | optional | sent | not sent yet |
-| Layer geometry in Arrow | `geoarrow.wkb` extension | plain binary | as the standard |
 | Layer geometry in Parquet | GeoParquet `geo` metadata | as the standard | WKB without `geo` metadata |
 | GeoJSON features | `id` is the `location_key`; paging in headers | as the standard | no `id` (the key is in `properties`); `next_cursor` in the body |
 | `bbox` | as above | as the standard | as the standard |
