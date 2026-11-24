@@ -23,6 +23,26 @@
   pair-level fields, filters and metrics are in it, and every `{value, unit}` parameter is converted
   to it. It defaults to the primary dataset's unit.
 
+## Converting on read
+
+A read's `unit` (`data-api.md`) converts what it returns. It must be of the values' dimension. If it
+isn't, the read fails with 422 (`errors` entry `loc` `["query", "unit"]`).
+
+- **A timeseries' `value`** converts affinely, as above.
+- **Run results** convert per metric, by its result unit (`metrics.md`, "Result units"):
+
+  | Metric | Converts |
+  | --- | --- |
+  | levels: `minimum`, `maximum`, `average` | affinely |
+  | every other metric in the evaluation unit (errors, `max_value_delta`, spreads, CRPS, interval widths and scores, pinball loss) | by scale alone |
+  | in the evaluation unit's square: `mean_square_error`, `variance` | by the scale squared |
+  | `sum` | by scale alone when the two units' offsets are equal; otherwise it can't be converted |
+  | seconds, days, or no unit | unchanged |
+
+  A metric's interval bounds convert with it.
+- **Can't be converted:** 422 with `code` `unit_not_convertible`, naming the metrics in `detail`.
+  Select the other columns (`columns`) to read the rest in that unit.
+
 ## Known differences (not shared)
 
 | | TEEHR | VeriRace |
