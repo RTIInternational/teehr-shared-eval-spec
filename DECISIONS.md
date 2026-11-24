@@ -9,6 +9,7 @@ proposed and who agreed (see `GOVERNANCE.md`).
 
 | Date | Topic | Decision | By | Accepted | Where |
 | --- | --- | --- | --- | --- | --- |
+| 2026-11-24 | Units on reads | Reads take `unit` (UCUM). A timeseries' `value` converts affinely. Results convert by each metric's kind (value, sum, difference, difference², ratio, time, invariant) and its options, transform and stage: VeriRace's rules (`verirace.metrics.units`). Columns that can't be converted give 422 `unit_not_convertible`. Responses give their unit in `X-Unit`. A read's `filter` sees values in the requested unit | TEEHR (rules: VeriRace) | VeriRace | #13 |
 | 2026-11-24 | Value flags | Optional timeseries columns `approval_status` (the source's review state, its own words, e.g. USGS `Provisional`/`Approved`) and `qualifier` (the source's codes, comma-separated) replace `quality`; both null where the source gives none. Named as USGS names them, its only source so far | TEEHR | VeriRace | #12 |
 | 2026-11-17 | Groups without pairs | A group exists only if it has at least one complete pair; a series whose secondary values are all missing gets no row (not `count` 0). Missing data is reported by completeness checks against the series catalog, not by evaluations | TEEHR | | #11 |
 | 2026-11-17 | Conformance cases | The case layout and comparison rules in `conformance/README.md`; cases run by both systems through teehr-core's runner (`teehr_core.conformance`), each with its own `evaluate`; `conformance/units.csv` is the cases' unit table | TEEHR | | #11 |

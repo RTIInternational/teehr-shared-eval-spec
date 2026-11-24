@@ -14,6 +14,7 @@
 | `limit` | rows per page |
 | `cursor` | opaque, from the previous page |
 | `count` | `true` to include the total row count |
+| `unit` | timeseries: return `value` in this unit (UCUM); see "Units" below |
 
 **Formats,** chosen by `Accept`:
 
@@ -33,6 +34,23 @@
 - Page size caps: 10,000 rows for JSON, 1,000,000 for binary formats.
 
 A system may add headers of its own (TEEHR sends `X-Snapshot-Id`).
+
+## Units
+
+`unit` converts what a read returns. Stored values don't change. How each value converts, and the
+errors, are in `units.md` ("Converting on read"). It applies to:
+
+- a timeseries' `value` on `…/data`;
+- a system's read of a run's results, which takes the same `unit`.
+
+The response says which unit it's in: `unit` in a JSON body, and the `X-Unit` header for every format.
+Without `unit`, values come back as stored (results: in the evaluation unit).
+
+With `unit`, `filter` sees values in that unit: `value > 1000` with `unit=[cft_i]/s` selects values
+over 1000 ft³/s. A system may convert the data first or rewrite the expression, replacing each
+unit-bearing column with its conversion (`value` → `(a·value + b)`, `units.md`); the rows are the
+same. A filter on a column that can't be converted fails as reading it would. Without `unit`,
+literals are read as `spec/expressions.md` says.
 
 ## Layers
 
@@ -80,6 +98,9 @@ Every error is RFC 9457 `application/problem+json`:
 | Layer geometry in Parquet | GeoParquet `geo` metadata | as the standard | WKB without `geo` metadata |
 | GeoJSON features | `id` is the `location_key`; paging in headers | as the standard | no `id` (the key is in `properties`); `next_cursor` in the body |
 | `bbox` | as above | as the standard | as the standard |
+| `unit` on reads | `…/data` and results, converting as `units.md` says | not yet | on `…/values` and results |
+| Response unit header | `X-Unit` | not yet | `X-VeriRace-Unit` (results) |
+| Layer routes | read through `…/datasets/{name}/data` | as the standard | `…/layers/{name}/features` |
 
 ## Open
 
