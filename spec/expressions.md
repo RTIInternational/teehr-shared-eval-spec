@@ -51,3 +51,5 @@ canonical unit** (`standards/units.md`), not in the unit the dataset was stored 
 filter selects the same rows in both systems. A literal in a pair-level `filter` or
 `fields[].expr` is read in the evaluation unit (`output.unit`): after pairing, both sides are in
 that unit.
+A literal in a data API read's `filter` is read in the read's `unit` when it gives one
+(`standards/data-api.md`): the filter sees the values as returned.

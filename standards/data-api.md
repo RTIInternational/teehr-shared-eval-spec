@@ -46,8 +46,11 @@ errors, are in `units.md` ("Converting on read"). It applies to:
 The response says which unit it's in: `unit` in a JSON body, and the `X-Unit` header for every format.
 Without `unit`, values come back as stored (results: in the evaluation unit).
 
-`unit` doesn't change how `filter` is read: its literals are read as `spec/expressions.md` says, not
-in the requested unit.
+With `unit`, `filter` sees values in that unit: `value > 1000` with `unit=[cft_i]/s` selects values
+over 1000 ft³/s. A system may convert the data first or rewrite the expression, replacing each
+unit-bearing column with its conversion (`value` → `(a·value + b)`, `units.md`); the rows are the
+same. A filter on a column that can't be converted fails as reading it would. Without `unit`,
+literals are read as `spec/expressions.md` says.
 
 ## Layers
 

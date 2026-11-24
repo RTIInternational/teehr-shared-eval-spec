@@ -5,7 +5,7 @@
 - `data-api.md`, `units.md`: a `unit` parameter on reads (a timeseries' `value` and run results).
   Results convert by each metric's kind (value, sum, difference, difference², ratio, time,
   invariant), with its options, transform and stage, as VeriRace does; columns that can't be
-  converted (an offset under ratios, sums and transforms) give 422 `unit_not_convertible`. The
+  converted (an offset under ratios, sums and transforms) give 422 `unit_not_convertible`. With `unit`, a read's `filter` sees values in that unit. The
   response gives its unit in `X-Unit`. New known differences: `unit` on reads, the unit header and
   VeriRace's layer routes.
 - `timeseries.md`: optional `quality` becomes `qualifier` (the source's codes, comma-separated) and
