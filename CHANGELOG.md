@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- `data-api.md`: TEEHR takes `unit` on reads and sends `X-Unit` (teehr-cloud-core#282); its known-difference cells say so.
 - `data-api.md`: TEEHR marks layer geometry in Arrow as `geoarrow.wkb`; that known difference is removed.
 - `data-api.md`, `units.md`: a `unit` parameter on reads (a timeseries' `value` and run results).
   Results convert by each metric's kind (value, sum, difference, difference², ratio, time,

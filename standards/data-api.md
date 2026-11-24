@@ -97,8 +97,8 @@ Every error is RFC 9457 `application/problem+json`:
 | Layer geometry in Parquet | GeoParquet `geo` metadata | as the standard | WKB without `geo` metadata |
 | GeoJSON features | `id` is the `location_key`; paging in headers | as the standard | no `id` (the key is in `properties`); `next_cursor` in the body |
 | `bbox` | as above | as the standard | as the standard |
-| `unit` on reads | `…/data` and results, converting as `units.md` says | not yet | on `…/values` and results |
-| Response unit header | `X-Unit` | not yet | `X-VeriRace-Unit` (results) |
+| `unit` on reads | `…/data` and results, converting as `units.md` says | as the standard | on `…/values` and results |
+| Response unit header | `X-Unit` | as the standard | `X-VeriRace-Unit` (results) |
 | Layer routes | read through `…/datasets/{name}/data` | as the standard | `…/layers/{name}/features` |
 
 ## Open
